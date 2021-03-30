@@ -22,10 +22,22 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+
+       - name: Checkout
+         uses: actions/checkout@v1
+
+       - name: Configure Git
+         run: |
+           git config user.name "$GITHUB_ACTOR"
+           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
       - name: Helm Chart Releaser
         # You may pin to the exact commit or the version.
         # uses: helm/chart-releaser-action@120944e66390c2534cc1b3c62d7285ba7ff02594
         uses: helm/chart-releaser-action@v1.2.0
+         env:
+           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
         with:
           # The chart-releaser version to use (default: v1.2.0)
           version: v1.2.0
