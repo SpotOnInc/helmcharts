@@ -79,8 +79,19 @@ env: {}
 #     secret: kubernetes-secret-name
 #     key: key-name-in-secret
 
+
+initcontainers:
+  enabled: true
+
+  FirstInitContainer: |
+    - name: do-something
+      image: busybox
+      command: ['sh', 'sleep 60']
+
+  extraInitContainer: {}
+
 deployment:
-  enabled: false
+  enabled: true
   ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}
@@ -89,24 +100,12 @@ deployment:
   #   name: value
   # labels:
   #   name: value
-  initcontainers:
-    enabled: false
 
-    FirstInitContainer: |
-      - name: do-something
-        image: busybox
-        command: ['sh', 'sleep 60']
-
-    extraInitContainers: |
-      # - name: do-something
-      #   image: busybox
-      #   command: ['do', 'something']
 
 
   pod:
     command: [ "sleed 45" ]
     args: [ '--args2', 'santos', 'cokas']
-    # securityContext: {}
     # hostAliases:
     #  - ip: "10.1.2.3"
     #    hostnames:
@@ -119,6 +118,18 @@ deployment:
     labels: {}
     # command:
     args: []
+
+
+FirstVolumeMount: |
+  - name: shared-data
+    mountPath: /mnt/shared-data
+    readOnly: false
+
+extraVolumeMounts: |
+  # - name: extras
+  #   mountPath: /usr/share/extras
+  #   readOnly: true
+
 
 statefulset:
   enabled: false
@@ -359,7 +370,13 @@ probes: {}
 #      path: /
 #      port: http
 
-resources: {}
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 100m
 #  limits:
 #    cpu: 100m
 #    memory: 128Mi
@@ -457,3 +474,23 @@ crd: {}
 #                protocol: HTTPS
 #            location: MESH_EXTERNAL
 #            resolution: DNS
+
+
+## Node selector
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+nodeSelector: {}
+
+## Affinity
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
+
+## Tolerations for pod assignment
+## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+##
+tolerations: []
+
+## Security context
+securityContext:
+  enabled: false
+  runAsUser: 999
+  fsGroup: 999

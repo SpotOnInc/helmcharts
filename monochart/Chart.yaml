@@ -34,8 +34,13 @@ maintainers:
 annotations:
   team: DevOps
 
-dependencies:
-  - name: common
-    version: 0.x.x
-    repository: https://charts.bitnami.com/bitnami
+# dependencies:
+#   - name: common
+#     version: 0.x.x
+#     repository: https://charts.bitnami.com/bitnami
 
+# dependencies:
+# - name: dockercfg
+#   version: 0.1.0
+#   repository: https://charts.cloudposse.com/incubator/
+#   condition: dockercfg.enabled
