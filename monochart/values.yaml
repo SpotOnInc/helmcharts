@@ -1,0 +1,436 @@
+replicaCount: 1
+
+# serviceAccountName: my-service-account
+
+dockercfg:
+  enabled: false
+  # image:
+  #   pullSecret:
+  #     registry: r.cfcr.io
+  #     username: example
+  #     password: password
+
+image:
+  repository: scratch
+  tag: latest
+  pullPolicy: IfNotPresent
+  ## Additional docker pull secrets
+  # pullSecrets:
+  #   - "docker-secret-1"
+  #   - "docker-secret-2"
+
+configMaps: {}
+  # default:
+  #   enabled: false
+  #   mountPath: /config-default
+  #   annotations:
+  #     name: value
+  #   labels:
+  #     name: value
+  #   env:
+  #     ENV_NAME: ENV_VALUE
+  #   files:
+  #     "test.txt": |-
+  #         ...
+  #     "test.yaml":
+  #         group:
+  #           key: value
+
+secrets: {}
+  # default:
+  #   enabled: false
+  #   mountPath: /secret-default
+  #   annotations:
+  #     name: value
+  #   labels:
+  #     name: value
+  #   env:
+  #     ENV_NAME: ENV_VALUE
+  #   files:
+  #     "test.crt": |-
+  #         ...
+  #     "test.yaml":
+  #         group:
+  #           key: value
+
+# Inline ENV variables
+env: {}
+  # ENV_NAME: ENV_VALUE
+
+# ENV variables from existing Kubernetes secrets and ConfigMaps
+#envFrom:
+#  secrets:
+#    - secret-1
+#    - secret-2
+#  configMaps:
+#    - config-1
+#    - config-2
+
+# ENV variables from fieldRef.fieldPath
+# https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/#use-pod-fields-as-values-for-environment-variables
+#envFromFieldRefFieldPath:
+#  ENV_1: path-1
+#  ENV_2: path-2
+
+# ENV variables from  secretkeyref
+# https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables
+# envFromSecretKeyRef:
+#   - name: MY_ENV_VARIABLE
+#     secret: kubernetes-secret-name
+#     key: key-name-in-secret
+
+deployment:
+  enabled: false
+  ## Pods replace strategy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  # strategy: {}
+  revisionHistoryLimit: 10
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
+  pod:
+    # securityContext: {}
+    # hostAliases:
+    #  - ip: "10.1.2.3"
+    #    hostnames:
+    #    - "foo.remote"
+    #    - "bar.remote"
+    annotations: {}
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+    labels: {}
+    # command:
+    args: []
+
+statefulset:
+  enabled: false
+  ## Pods replace strategy
+  ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
+  # strategy: {}
+  revisionHistoryLimit: 10
+  terminationGracePeriodSeconds: 10
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
+  pod:
+    # securityContext: {}
+    # hostAliases:
+    #  - ip: "10.1.2.3"
+    #    hostnames:
+    #    - "foo.remote"
+    #    - "bar.remote"
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+    labels: {}
+    # command:
+    # args:
+  ## Configure volumeClaimTemplate block
+  persistence:
+    enabled: true
+    useVolumeClaimTemplates: true
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    mountPath: /data
+    # storageClass: gp2
+  #   annotations:
+  #     name: value
+  #   labels:
+  #     name: value
+
+daemonset:
+  enabled: false
+  ## Pods replace strategy
+  ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#daemonsetupdatestrategy-v1-apps
+  # strategy: {}
+  revisionHistoryLimit: 10
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
+  pod:
+    # securityContext: {}
+    # hostAliases:
+    #  - ip: "10.1.2.3"
+    #    hostnames:
+    #    - "foo.remote"
+    #    - "bar.remote"
+    annotations: {}
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+    labels: {}
+    # command:
+    args: []
+
+job:
+  default:
+    enabled: false
+    # labels:
+    #   name: value
+    # annotations:
+    #   name: value
+    restartPolicy: Never
+    pod:
+      # securityContext: {}
+      # hostAliases:
+      #  - ip: "10.1.2.3"
+      #    hostnames:
+      #    - "foo.remote"
+      #    - "bar.remote"
+      annotations: {}
+      ## https://github.com/uswitch/kiam
+      ## https://github.com/jtblin/kube2iam
+      #  iam.amazonaws.com/role: role-arn
+      labels: {}
+      # command:
+      args: []
+
+cronjob:
+  default:
+    enabled: false
+    # labels:
+    #   name: value
+    # annotations:
+    #   name: value
+    successfulJobsHistoryLimit: 1
+    failedJobsHistoryLimit: 1
+    concurrencyPolicy: Forbid
+    schedule: "* * */15 * *"
+    activeDeadlineSeconds: 300
+    restartPolicy: Never
+    pod:
+      # securityContext: {}
+      # hostAliases:
+      #  - ip: "10.1.2.3"
+      #    hostnames:
+      #    - "foo.remote"
+      #    - "bar.remote"
+      annotations: {}
+      ## https://github.com/uswitch/kiam
+      ## https://github.com/jtblin/kube2iam
+      #  iam.amazonaws.com/role: role-arn
+      labels: {}
+      # command:
+      args: []
+
+service:
+  enabled: false
+  type: ClusterIP
+  # ports:
+  #   name:
+  #     internal: 80
+  #     external: 80
+  # labels:
+  #   name: value
+  # annotations:
+  #   name: value
+
+## ServiceMonitor CRDs to create & be scraped by the Prometheus instance.
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitorspec
+##
+serviceMonitors: {}
+#  ## Name of the ServiceMonitor to create
+#  ##
+#  name:
+#
+#    ## Labels to set used for the ServiceMonitorSelector.
+#    labels:
+#      prometheus: kube-prometheus
+#
+#   ## Service label for use in assembling a job name of the form <label value>-<port>
+#   ## If no label is specified, the service name is used.
+#   jobLabel: ""
+#
+#    ## Label selector for services to which this ServiceMonitor applies
+#    ##
+#    selector:
+#      matchLabels:
+#        app: nginx-ingress
+#
+#
+#    ## Namespaces from which services are selected
+#    ##
+#    namespaceSelector:
+#      ## Match any namespace
+#      ##
+#      # any: false
+#
+#      ## Explicit list of namespace names to select
+#      ##
+#      # matchNames: []
+#
+#
+#    ## Endpoints of the selected service to be monitored
+#    ##
+#    endpoints:
+#      ## Name of the endpoint's service port
+#      ## Mutually exclusive with targetPort
+#      # - port: ""
+#
+#      ## Name or number of the endpoint's target port
+#      ## Mutually exclusive with port
+#      # - targetPort: ""
+#
+#      ## File containing bearer token to be used when scraping targets
+#      ##
+#      #   bearerTokenFile: ""
+#
+#      ## Interval at which metrics should be scraped
+#      ##
+#      #   interval: 30s
+#
+#      ## HTTP path to scrape for metrics
+#      ##
+#      #   path: /metrics
+#
+#      ## HTTP scheme to use for scraping
+#      ##
+#      #   scheme: http
+#
+#      ## TLS configuration to use when scraping the endpoint
+#      ##
+#      #   tlsConfig:
+#
+#          ## Path to the CA file
+#          ##
+#          # caFile: ""
+#
+#          ## Path to client certificate file
+#          ##
+#          # certFile: ""
+#
+#         ## Skip certificate verification
+#          ##
+#          # insecureSkipVerify: false
+#
+#          ## Path to client key file
+#          ##
+#          # keyFile: ""
+#
+#          ## Server name used to verify host name
+#          ##
+#          # serverName: ""
+
+## https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusrulespec
+prometheusRules: {}
+#  name:
+#    labels:
+#      prometheus: kube-prometheus
+#    groups:
+#    - name: prometheus.rules
+#      rules:
+#      - alert: PrometheusConfigReloadFailed
+#        expr: prometheus_config_last_reload_successful == 0
+#        for: 10m
+#        labels:
+#          severity: warning
+#        annotations:
+#          description: Reloading Prometheus' configuration has failed for {{$labels.namespace}}/{{$labels.pod}}
+#          summary: Reloading Promehteus' configuration failed
+
+probes: {}
+#  livenessProbe:
+#    httpGet:
+#      path: /
+#      port: http
+#  readinessProbe:
+#    httpGet:
+#      path: /
+#      port: http
+
+resources: {}
+#  limits:
+#    cpu: 100m
+#    memory: 128Mi
+#  requests:
+#    cpu: 80m
+#    memory: 64Mi
+
+persistence:
+  enabled: false
+  storageName: storage
+  mountPath: /data
+  accessMode: ReadWriteOnce
+  size: 8Gi
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
+
+  ## A manually managed Persistent Volume and Claim
+  ## Requires Persistence.Enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # existingClaim:
+
+  ## Data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ## set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ## GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+
+# Ingress for load balancer
+ingress:
+  default:
+    enabled: false
+#    port: port-name
+#    labels:
+#      dns: "route53"
+#    annotations:
+#      kubernetes.io/ingress.class: nginx
+#      kubernetes.io/tls-acme: "true"
+#    hosts:
+#      "domain.com": /
+#      "www.domain.com": /
+#    tls:
+#    - secretName: server-tls
+#      hosts:
+#      - domain.com
+
+# Istio Virtual Services for load balancer
+virtualServices:
+  default:
+    enabled: false
+#    hosts:
+#      - "domain.com"
+#    http:
+#    - name: "reviews-v2-routes"
+#      match:
+#      - uri:
+#          prefix: "/wpcatalog"
+#      - uri:
+#          prefix: "/consumercatalog"
+#      rewrite:
+#        uri: "/newcatalog"
+#      route:
+#      - destination:
+#          host: reviews.prod.svc.cluster.local
+#          subset: v2
+#    - name: "reviews-v1-route"
+#      route:
+#      - destination:
+#          host: reviews.prod.svc.cluster.local
+#          subset: v1
+
+
+crd: {}
+#  "networking.istio.io/v1alpha3":
+#    ServiceEntry:
+#      default:
+#        enabled: true
+#        spec:
+#          hosts:
+#            - www.googleapis.com
+#            ports:
+#              - number: 443
+#                name: https
+#                protocol: HTTPS
+#            location: MESH_EXTERNAL
+#            resolution: DNS

@@ -1,0 +1,92 @@
+{{- $root := . -}}
+{{- range $name, $cron := .Values.cronjob -}}
+{{- if $cron.enabled }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+{{- with $cron.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $cron.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  successfulJobsHistoryLimit: {{ default 1 $cron.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 1 $cron.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ default "Forbid" $cron.concurrencyPolicy }}
+  schedule: '{{ required "Schedule required!" $cron.schedule }}'
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: {{ default 300 $cron.activeDeadlineSeconds }}
+      template:
+        metadata:
+          name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+{{- with $cron.pod.annotations }}
+          annotations:
+{{ toYaml . | indent 12 }}
+{{- end }}
+          labels:
+            app: {{ include "common.name" $root }}
+            release: {{ $root.Release.Name | quote }}
+{{- with $cron.pod.labels }}
+{{ toYaml .| indent 12 }}
+{{- end }}
+        spec:
+{{- if index $root.Values "serviceAccountName" }}
+          serviceAccountName: {{ $root.Values.serviceAccountName }}
+{{- end }}
+          restartPolicy: '{{ default "Never" $cron.restartPolicy }}'
+          containers:
+          - name: {{ $root.Release.Name }}
+            image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}
+            imagePullPolicy: {{ $root.Values.image.pullPolicy }}
+{{ include "monochart.env" $root | indent 12 }}
+            {{- with $cron.pod.command }}
+            command:
+{{ toYaml . | indent 12}}
+            {{- end }}
+            {{- with $cron.pod.args }}
+            args:
+{{ toYaml . | indent 12}}
+            {{- end }}
+{{- with $cron.pod.securityContext }}
+            securityContext:
+{{ toYaml . | indent 14 }}
+{{- end }}
+            volumeMounts:
+            - mountPath: {{ $root.Values.persistence.mountPath | quote }}
+              name: storage
+{{ include "monochart.files.volumeMounts" $root | indent 12 }}
+{{- with $root.Values.resources }}
+            resources:
+{{ toYaml . | indent 14 }}
+{{- end }}
+{{- with $cron.pod.hostAliases }}
+          hostAliases:
+{{ toYaml . | indent 12 }}
+{{- end }}
+          imagePullSecrets:
+{{- if $root.Values.dockercfg.enabled }}
+            - name: {{ include "common.fullname" $root }}
+{{- end }}
+{{- with $root.Values.image.pullSecrets }}
+{{- range . }}
+            - name: {{ . }}
+{{- end }}
+{{- end }}
+          volumes:
+          - name: storage
+{{- if $root.Values.persistence.enabled }}
+            persistentVolumeClaim:
+              claimName: {{ $root.Values.persistence.existingClaim | default (include "common.fullname" $root) }}
+{{- else }}
+            emptyDir: {}
+{{- end }}
+{{ include "monochart.files.volumes" $root | indent 10 }}
+{{- end -}}
+{{- end -}}
