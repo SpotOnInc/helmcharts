@@ -1,3 +1,4 @@
+{{/* vim: set filetype=mustache: */}}
 {{- /*
 From obsolete Kubernetes Incubator Common chart
 https://github.com/helm/charts/blob/master/incubator/common/
@@ -33,14 +34,20 @@ Example output:
     {{- replace "+" "_" .Chart.Version | printf "%s-%s" .Chart.Name -}}
 {{- end -}}
 
-{{- /*
-common.labels.standard prints the standard Helm labels.
-
-The standard labels are frequently used in metadata.
-*/ -}}
+{{/*
+Kubernetes standard labels
+*/}}
 {{- define "common.labels.standard" -}}
-app: {{ template "common.name" . }}
-chart: {{ template "common.chartref" . }}
-heritage: {{ .Release.Service | quote }}
-release: {{ .Release.Name | quote }}
+app.kubernetes.io/name: {{ include "common.names.name" . }}
+helm.sh/chart: {{ include "common.names.chart" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{/*
+Labels to use on deploy.spec.selector.matchLabels and svc.spec.selector
+*/}}
+{{- define "common.labels.matchLabels" -}}
+app.kubernetes.io/name: {{ include "common.names.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
