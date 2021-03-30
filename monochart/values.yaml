@@ -89,7 +89,23 @@ deployment:
   #   name: value
   # labels:
   #   name: value
+  initcontainers:
+    enabled: false
+
+    FirstInitContainer: |
+      - name: do-something
+        image: busybox
+        command: ['sh', 'sleep 60']
+
+    extraInitContainers: |
+      # - name: do-something
+      #   image: busybox
+      #   command: ['do', 'something']
+
+
   pod:
+    command: [ "sleed 45" ]
+    args: [ '--args2', 'santos', 'cokas']
     # securityContext: {}
     # hostAliases:
     #  - ip: "10.1.2.3"
@@ -350,6 +366,13 @@ resources: {}
 #  requests:
 #    cpu: 80m
 #    memory: 64Mi
+
+## Init container resources defaults
+initContainer:
+  resources:
+    requests:
+      memory: 10Mi
+      cpu: 10m
 
 persistence:
   enabled: false
