@@ -33,8 +33,7 @@ spec:
 {{- end }}
 {{- else }}
   selector:
-    app: {{ include "common.name" . }}
-    release: {{ .Release.Name }}
+{{- include "common.labels.standard" . | nindent 4 }}
     serve: "true"
 {{- end -}}
 {{- end -}}
