@@ -124,8 +124,8 @@ deployment:
 
 
   pod:
-    command: [ "sleed 45" ]
-    args: [ '--args2', 'santos', 'cokas']
+    command: []
+    args: []
     # hostAliases:
     #  - ip: "10.1.2.3"
     #    hostnames:
