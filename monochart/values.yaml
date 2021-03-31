@@ -61,7 +61,7 @@ secrets: {}
 # to create a sealedsecrets you can use the webseal or https://webseal.qa.spoton.sh/
 # NOTE: remember to add the sealedsecret name to the "envFrom.secrets" above.
 sealedsecrets: 
-  enabled: false
+  enabled: true
   keys:
     - name: google-secrets
       encryptedData:
