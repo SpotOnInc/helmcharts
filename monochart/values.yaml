@@ -36,6 +36,21 @@ configMaps: {}
   #         group:
   #           key: value
 
+
+sealedsecrets: 
+  enabled: true
+  keys:
+    - name: google-secrets
+      encryptedData:
+        API_PASS: nbdafafdas
+        SECRET1_NAME: AgSDSDSB7oTOgJdtURoUrZ7IDuC50xEMWFwAeNXnM+s+QcdAXc2Bp99uD2RKYjCvdkP/+OzLmF0SqVfqjPM/+toplTMgNSDQSXGKZMQmrn+fXeq61qXqj2vQ/2tz/98DYXDQXJK3LPpCT/bXJ0Zv6jjxBkONOqkko//PWDxDk/zqVM75MH5qhy8K5Ds9YpQ3aWCtHuRXe1365fQPDpl+hJGZZpC1NZbQFUWpNrXOLQrMRXP8fOZ3+VWo0+elebPE9OpxoWuYXQHX4Dn8B7ArNp6XPJbbxBgsKNv9pG7VHNDRH98kUbttfOMJjIYF0d2IoiAPA9mwSsY3S7Jn0/dp8PL9WgNiILaVDWihs9nhg/iJZvPD8mymNZOggQH8gGkMQQ8p+rgWKeenTwHpC0gfZjQ73OyLuSKhYHn0tvmloiDq0dDreoZCiahZEfZ3MGaOD7xqj8qHmsHxzaDlilBLiM0X1XOmSVxs1Nvmka6vAQEzX6fesyAmPfKqdPEPGpjn39lkWKOHJqby3UnAyjNeTkCvjc4hwQwzNmjivyrbskQGwj3XxpVZruD9XHDRgMca/r3T9NVIpng0yVEmA6HKVOLupUMHvHsY4rE+2n5du/NmBaaw3lM5MybnhxIDQGQz8bFhxr5iIM9vBhF+zRz0ahtAULODh0+ebVHrCbQQnK3EzrkQzxqu6EPPIsuPQepcdeCAmNnoS0/JC2xC1rmEz
+        ANOTHER_SECRET: AgCSDSDSNXUuenZ8FeVEOG+BTH9AzbqYcz9VK2GIJdXgnInUv/N7wnIz77yjMd52qXV9SuNJo9RIJwJ+ioo0PuTYBT2ueApCras6hRMtey1fx0shjNJZjYv6uVWsmdd+Y17BTeeB7J6wo0spv/GfnHrtrTn2AfMxV/M2brSxG4yQ6gsrUNEdhdHcII47ae7DDqjEJ2UZgVdRCv8o8AKCu/NqiPEJklLvcXUigKc7KNyGVoJX9uFWGl4buu7hs5IpKfj58tbi6+8yW5YW3PyVbkydIxVAZrGRZS5G60jbCc7UGmo3fuWI7YBZtbsWw8alBexOX/U6+CDMRGClqdick5GGM0cGXHfsSM1XTMQBMxuWTzvEO2RnrgiRZ57PcBh5xrvBRQu49LhZAukPvLj2x6P2jrhU7xrjO+YI1kSZow7tuiIQNZuR+CKNxpZuNUqYvci3jRbj3Pxg0W9AkntTouFxyd4O02yz+OP25Zfqa+F1Uu/JZ9Zkph1/vykixCRc3sEx2oDXjQKFoNFnbCfi7vhNsZNfnLc/jOhXoMOrd63ZR+37cAXyiZ/6GxzWSYygb1CaR9PtALWvkThbgEYRGWdMVKVqyk6Br7K8gyodMNx1/QAX0/Qd9ykAMVoFhC6ykrVvkdPG2n65Ftx0jLrPQ3U75bijffl7e0UvA4olhBxtmgSMymAmKrCs59EqXhAfBcOdaUOwSguyZAJuJ3Wza9eJWFQ==
+
+    - name: aws-s3
+      encryptedData:
+        USER_ADMIN: sfhiewhiewnfilblfiabflisafblisafalifaifnakfs
+        PASS_ADMIN: dfasifnaisnaisdnbafsbasfbsaif
+
 secrets: {}
   # default:
   #   enabled: false
@@ -81,7 +96,7 @@ env: {}
 
 
 initcontainers:
-  enabled: true
+  enabled: false
 
   FirstInitContainer: |
     - name: do-something
@@ -91,7 +106,7 @@ initcontainers:
   extraInitContainer: {}
 
 deployment:
-  enabled: true
+  enabled: false
   ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}
