@@ -521,8 +521,23 @@ securityContext:
   fsGroup: 999
 
 
+# This will load a loca file inside of a ENV variable.
+# NOTE: Rememeber to add the cmf.name to "envFrom.configMaps"
+configmapfiles: 
+  enabled: false
+  cmf:
+    - name: someName
+      filepath: /path/to/yourfile.json
+    - name: anotherCMF
+      filepath: ../second/path
+
+
 ## Security context
 DataDogDefaultEnv:
   enabled: false
+
+
+
+
 
 
