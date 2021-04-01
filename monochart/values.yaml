@@ -521,16 +521,15 @@ securityContext:
   fsGroup: 999
 
 
-# This will load a loca file inside of a ENV variable.
-# NOTE: Rememeber to add the cmf.name to "envFrom.configMaps"
-configmapfiles: 
-  enabled: false
-  cmf:
-    - name: someName
-      filepath: /path/to/yourfile.json
-    - name: anotherCMF
-      filepath: ../second/path
-
+# Helm charts don't allow include a file outside from the chart directory.
+# To workaround this, we can use the "set-file" parameters to include a file inside
+# of a Values and after this, put this Value inside an ConfigMapfile (cmf)
+# You need to follow this exact syntax in your helmfile
+# set:
+#   - name: cmf.The_Name_of_the_Resource.data
+#     file: /path/relative/to/manifest
+#
+# NOTE: Rememeber to add the cmf.name to "envFrom.configMaps" to have it inside of container.
 
 ## Security context
 DataDogDefaultEnv:

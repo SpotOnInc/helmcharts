@@ -1,19 +1,19 @@
 {{/*
 This template will allow create a configmap from a file.
 */}}
+
 {{- $root := . -}}
-{{- if .Values.configmapfiles.enabled }}
-{{- range $CMF := .Values.configmapfiles.cmf }}
+{{- if .Values.cmf }}
+{{- range $configMapName, $configMap := .Values.cmf }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $CMF.name }}
+  name: {{ $configMapName }}
   labels: 
     {{- include "common.labels.standard" $root | nindent 4 }}
 data:
-  {{ $CMF.name }}: |-
-    {{ $CMF.filepath }}
+{{ $configMapName | indent 2}}: |-
+{{ $configMap.data | indent 4}}
 {{- end }}
 {{- end }}
-
