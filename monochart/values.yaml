@@ -101,7 +101,7 @@ env: {}
 
 
 initcontainers:
-  enabled: true
+  enabled: false
 
   FirstInitContainer: |
     - name: do-something
@@ -532,10 +532,13 @@ securityContext:
 # NOTE: Rememeber to add the cmf.name to "envFrom.configMaps" to have it inside of container.
 
 ## Security context
-DataDogDefaultEnv:
+IncludeDataDogEnv:
   enabled: false
 
-
+IncludeForecastleEnv:
+  enabled: false
+  group: "Unlimited"
+  instance: "oidc-ingress"
 
 
 
