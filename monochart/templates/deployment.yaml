@@ -14,8 +14,17 @@ metadata:
 {{- with .Values.deployment.labels }}
 {{ toYaml .| indent 4 }}
 {{- end }}
-
-
+    # https://github.com/vhs-spoton/personal-doc/blob/main/networkpolices.md
+    {{- if .Values.networkPolicy.enabled }}
+    spoton.NetPolicy: enabled
+        {{- if .Values.networkPolicy.DenyALL.enabled }}
+    spoton.NetPolicy.DenyALL: enabled
+        {{- else }}
+    spoton.NetPolicy.DenyALL: disabled
+        {{- end }}
+    {{- else }}
+    spoton.NetPolicy: disabled
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
