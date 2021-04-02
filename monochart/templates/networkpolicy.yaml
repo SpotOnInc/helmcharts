@@ -1,0 +1,170 @@
+{{- $root := . -}}
+{{- if .Values.networkPolicy.enabled }}
+
+{{- if .Values.networkPolicy.DenyALL.enabled }}
+---
+{{/* Block all traffic by default. */}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: {{ $root.Release.Namespace }}
+{{- with $root.Values.networkPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "common.labels.standard" $root | indent 6 }}
+  policyTypes:
+  - Ingress
+  - Egress
+
+{{/* Allow DNS traffic by default. */}}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-DNS
+  namespace: {{ $root.Release.Namespace }}
+{{- with $root.Values.networkPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "common.labels.standard" $root | indent 6 }}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+
+{{/* End DenyALL */}}
+{{- end }}
+
+{{/* Make a loop over all the INGRESS rules*/}}
+{{- if .Values.networkPolicy.Ingress }}
+{{- range $NetPolicy := .Values.networkPolicy.Ingress }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $NetPolicy.name }}
+  namespace: {{ $root.Release.Namespace }}
+  {{- with $root.Values.networkPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "common.labels.standard" $root | indent 6 }}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+  {{- range $NPSelector, $NPValue := $NetPolicy.selector }}
+    {{- if eq $NPSelector "ipBlock" }}
+    - ipBlock:
+      {{- range $NetPolicy.selector.ipBlock }}
+        cidr: {{ . }}
+      {{- end }}
+    {{- end }}
+
+    {{- if eq $NPSelector "namespaceSelector" }}
+      {{- range $key, $value := $NetPolicy.selector.namespaceSelector }}
+    - namespaceSelector:
+        matchLabels:
+          {{ $key }}: {{ $value }}
+      {{- end }}
+    {{- end }}
+
+    {{- if eq $NPSelector "podSelector" }}
+      {{- range $key, $value := $NetPolicy.selector.podSelector }}
+    - podSelector:
+        matchLabels:
+          {{ $key }}: {{ $value }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  - ports:
+    {{- range $NPports := $NetPolicy.ports }}
+    - {{- $NPports | toYaml | nindent 6 -}}
+    {{- end }}
+
+{{/* End Ingress */}}
+{{- end }}
+{{- end }}
+
+
+{{/* Make a loop over all the EGRESS rules*/}}
+{{- if .Values.networkPolicy.Egress }}
+{{- range $NetPolicy := .Values.networkPolicy.Egress }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $NetPolicy.name }}
+  namespace: {{ $root.Release.Namespace }}
+  {{- with $root.Values.networkPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "common.labels.standard" $root | indent 6 }}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+  {{- range $NPSelector, $NPValue := $NetPolicy.selector }}
+    {{- if eq $NPSelector "ipBlock" }}
+    - ipBlock:
+      {{- range $NetPolicy.selector.ipBlock }}
+        cidr: {{ . }}
+      {{- end }}
+    {{- end }}
+
+    {{- if eq $NPSelector "namespaceSelector" }}
+      {{- range $key, $value := $NetPolicy.selector.namespaceSelector }}
+    - namespaceSelector:
+        matchLabels:
+          {{ $key }}: {{ $value }}
+      {{- end }}
+    {{- end }}
+
+    {{- if eq $NPSelector "podSelector" }}
+      {{- range $key, $value := $NetPolicy.selector.podSelector }}
+    - podSelector:
+        matchLabels:
+          {{ $key }}: {{ $value }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  - ports:
+    {{- range $NPports := $NetPolicy.ports }}
+    - {{- $NPports | toYaml | nindent 6 -}}
+    {{- end }}
+
+{{/* End Egress */}}
+{{- end }}
+{{- end }}
+
+{{/* End Template */}}
+{{- end }}
