@@ -141,19 +141,20 @@ deployment:
 
 
 FirstVolumeMounts: {}
-  # |
+# FirstVolumeMounts : |
   # - name: shared-data
   #   mountPath: /mnt/shared-data
   #   readOnly: false
 
 extraVolumeMounts: {}
+# extraVolumeMounts: |
   # |
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
 
 VolumeMountsConfig: {}
-  # |
+# VolumeMountsConfig: |
   # - name: shared-data
   #   emptyDir: {}
   # - name: extras

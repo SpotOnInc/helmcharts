@@ -7,7 +7,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: deny-all
+  name: "{{ include "common.fullname" . }}-deny-all"
   namespace: {{ $root.Release.Namespace }}
 {{- with $root.Values.networkPolicy.annotations }}
   annotations:
@@ -28,7 +28,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-dns
+  name: "{{ include "common.fullname" . }}-allow-dns"
   namespace: {{ $root.Release.Namespace }}
 {{- with $root.Values.networkPolicy.annotations }}
   annotations:
@@ -60,7 +60,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ $NetPolicy.name }}
+  name: "{{ include "common.fullname" . }}-{{ $NetPolicy.name }}"
   namespace: {{ $root.Release.Namespace }}
   {{- with $root.Values.networkPolicy.annotations }}
   annotations:
@@ -117,7 +117,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ $NetPolicy.name }}
+  name: "{{ include "common.fullname" . }}-{{ $NetPolicy.name }}"
   namespace: {{ $root.Release.Namespace }}
   {{- with $root.Values.networkPolicy.annotations }}
   annotations:
