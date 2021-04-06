@@ -140,12 +140,14 @@ deployment:
     args: []
 
 
-FirstVolumeMounts: |
-  - name: shared-data
-    mountPath: /mnt/shared-data
-    readOnly: false
+FirstVolumeMounts: {}
+  # |
+  # - name: shared-data
+  #   mountPath: /mnt/shared-data
+  #   readOnly: false
 
-extraVolumeMounts: |
+extraVolumeMounts: {}
+  # |
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
