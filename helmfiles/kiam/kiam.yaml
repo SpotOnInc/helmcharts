@@ -131,7 +131,7 @@ releases:
     vendor: "uswitch"
     default: "true"
   chart: "uswitch/kiam"
-  version: "5.9.0"
+  version: "6.0.x"
   wait: true
   recreatePods: false
   installed: {{ env "KIAM_INSTALLED" | default "true" }}
