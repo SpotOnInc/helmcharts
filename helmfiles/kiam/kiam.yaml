@@ -188,6 +188,11 @@ releases:
           # access to the metadata, while also doing a sanity check on the URL and giving you a template
           # in case you want to restrict access to one section of data.
           whitelist-route-regexp: '^/(latest/(meta-data|user-data|dynamic)|$)'
+        extraEnv:
+        - name: GRPC_GO_LOG_SEVERITY_LEVEL
+          value: '{{ env "GRPC_GO_LOG_SEVERITY_LEVEL" | default "info" }}'
+        - name: GRPC_GO_LOG_VERBOSITY_LEVEL
+          value: '{{ env "GRPC_GO_LOG_VERBOSITY_LEVEL" | default "1" }}'
       server:
         # Use chart default version of image if not otherwise specified
         {{- if (env "KIAM_IMAGE_TAG") }}
