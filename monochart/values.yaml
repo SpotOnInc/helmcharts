@@ -259,6 +259,7 @@ cronjob:
     concurrencyPolicy: Forbid
     schedule: "* * */15 * *"
     activeDeadlineSeconds: 300
+    startingDeadlineSeconds: 180
     restartPolicy: Never
     pod:
       # securityContext: {}
