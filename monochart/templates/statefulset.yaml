@@ -35,6 +35,7 @@ spec:
 {{ toYaml . | indent 8 }}
 {{- end }}
       labels:
+{{- include "common.labels.standard" . | nindent 8 }}
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
         serve: "true"
