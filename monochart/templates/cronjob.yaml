@@ -20,6 +20,7 @@ spec:
   failedJobsHistoryLimit: {{ default 1 $cron.failedJobsHistoryLimit }}
   concurrencyPolicy: {{ default "Forbid" $cron.concurrencyPolicy }}
   schedule: '{{ required "Schedule required!" $cron.schedule }}'
+  startingDeadlineSeconds: {{ default 180 $cron.startingDeadlineSeconds }}
   jobTemplate:
     spec:
       activeDeadlineSeconds: {{ default 300 $cron.activeDeadlineSeconds }}
