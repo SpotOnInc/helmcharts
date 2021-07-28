@@ -83,7 +83,8 @@ spec:
         {{ include "monochart.env" . | indent 8 }}
         {{- if .Values.initcontainers.extraInitContainer }}
 {{ tpl .Values.initcontainers.extraInitContainer . | indent 6 }}
-        {{- end }}      
+        {{ include "monochart.env" . | indent 8 }}
+        {{- end }}
 
         {{- if .Values.FirstVolumeMounts }}
         volumeMounts:
@@ -110,7 +111,7 @@ spec:
         tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
         {{- end }}
-      {{- end }}      
+      {{- end }}
 
 
       containers:
