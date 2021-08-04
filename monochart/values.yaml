@@ -55,12 +55,12 @@ secrets: {}
 
 
 
-# SealedSecrets resouces
+# SealedSecrets resources
 # Basically we need to add a name to the resource and all the secrets/values that we want.
 # the secret name can be changed without problem, but the resource name or the value *NO*
 # to create a sealedsecrets you can use the webseal or https://webseal.qa.spoton.sh/
-# NOTE: remember to add the sealedsecret name to the "envFrom.secrets" above.
-sealedsecrets: 
+# NOTE: remember to add the sealedsecrets name to the "envFrom.secrets" above.
+sealedsecrets:
   enabled: false
   # keys:
   #   - name: google-secrets
@@ -111,7 +111,7 @@ initcontainers:
   extraInitContainer: {}
 
 deployment:
-  enabled: true
+  enabled: false
   ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}
@@ -120,8 +120,6 @@ deployment:
   #   name: value
   # labels:
   #   name: value
-
-
 
   pod:
     command: []
@@ -132,8 +130,7 @@ deployment:
     #    - "foo.remote"
     #    - "bar.remote"
     annotations: {}
-    ## https://github.com/uswitch/kiam
-    ## https://github.com/jtblin/kube2iam
+    # https://github.com/uswitch/kiam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
     # command:
@@ -160,7 +157,6 @@ VolumeMountsConfig: {}
   # - name: extras
   #   configMap:
   #     name: config-template
-
 
 statefulset:
   enabled: false
@@ -524,7 +520,6 @@ securityContext:
   runAsUser: 999
   fsGroup: 999
 
-
 # Helm charts don't allow include a file outside from the chart directory.
 # To workaround this, we can use the "set-file" parameters to include a file inside
 # of a Values and after this, put this Value inside an ConfigMapfile (cmf)
@@ -533,7 +528,7 @@ securityContext:
 #   - name: cmf.The_Name_of_the_Resource.data
 #     file: /path/relative/to/manifest
 #
-# NOTE: Rememeber to add the cmf.name to "envFrom.configMaps" to have it inside of container.
+# NOTE: Remember to add the cmf.name to "envFrom.configMaps" to have it inside of container.
 
 ## Security context
 IncludeDataDogEnv:
@@ -562,13 +557,13 @@ networkPolicy:
   # One rule with many arguments:
   # Allow all traffic from namespace staging and prod on the port 5432
   # Allow all traffic from namespace staging and prod and where the pod label is "API" on the port 5432 and 443
-  # Two rules with similiar arguments:
+  # Two rules with similar arguments:
   # Allow all traffic from everyone on port 443.
   # Allow all traffic from 8.8.8.8 on port 80 and 21
   # We can use 3 types of Selector ipBlock, namespaceSelector and podSelector, plus the ports (port and protocol)
   # VERY IMPORTANT... using more than one selector will work as "OR" not like as "AND" in this template.
 
-  # In the example above, we are allowing the input traffic from the IPs 8.8.8.8 OR 1.1.1.1 OR from namespace: staging 
+  # In the example above, we are allowing the input traffic from the IPs 8.8.8.8 OR 1.1.1.1 OR from namespace: staging
   # OR namespace: prod OR pods with the role "frontend" on the ports 5432/TCP and 123/UDP
   Ingress: {}
   #   - name: test-ingress
@@ -597,9 +592,9 @@ networkPolicy:
   #       - port: 443
   #         protocol: TCP
 
-  # # The EGRESS rules will filter all the output traffic and is than necesary like the ingress.
+  # # The EGRESS rules will filter all the output traffic and is than necessary like the ingress.
   Egress: {}
-  #   # In this example we are allowing traffic HTTP and HTTPS to all destinationes (not very good, but is ok)
+  #   # In this example we are allowing traffic HTTP and HTTPS to all destinations (not very good, but is ok)
   #   - name: http-and-https
   #     ports:
   #       - port: 80

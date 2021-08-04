@@ -92,7 +92,7 @@ deployment:
   affinity:
     # use of simple rule
     affinityRule: "ShouldBeOnDifferentNode"
-    # use custom affinity rule. Here app MUST be on different host then postgres instance for it
+    # use custom affinity rule. Here app MUST be on different host then postgresql instance for it
     podAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
