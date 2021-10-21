@@ -549,11 +549,11 @@ IncludeForecastleEnv:
 # Spoton documentation https://github.com/vhs-spoton/personal-doc/blob/main/networkpolices.md
 # If enable, will allow or deny input or output traffic to specific port/pod/namespace/cidr.
 networkPolicy:
-  enabled: true
+  enabled: false
 
   annotations: []
 
-  # This will disable all the input/output traffic by default, except the DNS queries.
+  # This will disable all the input/output traffic by default, except the DNS queries, TCP/443 and KIAM traffic (TCP/80 for 169.254.169.254).
   # Is recommendable to have it disabled at begin to make tests, but enable it on production.
   DenyALL:
     enabled: true
