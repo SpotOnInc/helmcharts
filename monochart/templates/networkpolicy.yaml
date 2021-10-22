@@ -50,6 +50,58 @@ spec:
     - protocol: TCP
       port: 53
 
+{{/* Allow TCP/443 traffic by default. */}}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "{{ include "common.fullname" $root }}-allow-tcp-443"
+  namespace: {{ $root.Release.Namespace }}
+{{- with $root.Values.networkPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "common.labels.standard" $root | indent 6 }}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    ports:
+    - protocol: TCP
+      port: 443
+
+{{/* Allow KIAM traffic by default. */}}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "{{ include "common.fullname" $root }}-allow-kiam"
+  namespace: {{ $root.Release.Namespace }}
+{{- with $root.Values.networkPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "common.labels.standard" $root | indent 6 }}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 169.254.169.254/32
+    ports:
+    - protocol: TCP
+      port: 80
+
 {{/* End DenyALL */}}
 {{- end }}
 
