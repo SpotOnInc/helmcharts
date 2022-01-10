@@ -90,7 +90,7 @@ daemonset:
       enabled: no
   # Change this to true to run a Teleport node on Kubernetes masters.
   # This has not been tested and may not work.
-  runOnMasters: false
+  runOnMasters: true
 
 # Hopefully shouldn't need to change anything below here!
 labels: {}
