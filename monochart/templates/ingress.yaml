@@ -61,7 +61,7 @@ spec:
 {{- with $ingress.tls }}
   tls:
 {{ toYaml . | indent 4 }}
-    secretName: devops-ghactions-tls
+      secretName: devops-ghactions-tls
 {{- end -}}
 {{- end -}}
 {{- end -}}
