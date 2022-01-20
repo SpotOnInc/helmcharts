@@ -46,7 +46,7 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
-{{- if hasKey $ingress "port" | ternary $ingress.port | regexMatch "^[0-9]*$" }}
+{{- if default "<none>" $ingress.port | regexMatch "^[0-9]*$" }}
                   number: {{ $ingress.port }}
 {{- else }}
                   name: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
