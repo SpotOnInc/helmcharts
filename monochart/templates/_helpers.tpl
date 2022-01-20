@@ -155,3 +155,13 @@ The pod anti-affinity rule to prefer not to be scheduled onto a node if that nod
     topologyKey: "kubernetes.io/hostname"
 {{- end -}}
 
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "monochart.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create -}}
+    {{ default (include "common.fullname" .) .Values.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}

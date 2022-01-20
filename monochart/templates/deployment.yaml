@@ -60,9 +60,7 @@ spec:
 
 
     spec:
-      {{- if .Values.serviceAccountName }}
-      serviceAccountName: {{ .Values.serviceAccountName }}
-      {{- end }}
+      serviceAccountName: {{ template "monochart.serviceAccountName" . }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}

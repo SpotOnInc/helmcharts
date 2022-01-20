@@ -38,9 +38,7 @@ spec:
 {{ toYaml .| indent 12 }}
 {{- end }}
         spec:
-{{- if index $root.Values "serviceAccountName" }}
-          serviceAccountName: {{ $root.Values.serviceAccountName }}
-{{- end }}
+          serviceAccountName: {{ template "monochart.serviceAccountName" $root }}
           restartPolicy: '{{ default "Never" $cron.restartPolicy }}'
           containers:
           - name: {{ $root.Release.Name }}
