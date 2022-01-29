@@ -7,7 +7,7 @@
 {{- if semverCompare ">=1.19" $root.Capabilities.KubeVersion.Version }}
 apiVersion: networking.k8s.io/v1
 {{- else }}
-apiVersion: networking.k8s.io/v1beta
+apiVersion: networking.k8s.io/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
