@@ -2,6 +2,7 @@
 {{- $serviceName := include "common.fullname" . -}}
 {{- range $name, $ingress := .Values.ingress -}}
 {{- if $ingress.enabled }}
+# Check for using "networking.k8s.io/v1" is incorrect - https://github.com/jaegertracing/helm-charts/pull/279
 ---
 {{- if semverCompare ">=1.19" $root.Capabilities.KubeVersion.Version }}
 apiVersion: networking.k8s.io/v1
