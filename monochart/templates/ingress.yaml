@@ -3,7 +3,7 @@
 {{- range $name, $ingress := .Values.ingress -}}
 {{- if $ingress.enabled }}
 ---
-{{- if $root.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+{{- if semverCompare ">=1.19" $root.Capabilities.KubeVersion.Version }}
 apiVersion: networking.k8s.io/v1
 {{- else }}
 apiVersion: networking.k8s.io/v1beta
@@ -40,7 +40,7 @@ spec:
       http:
         paths:
           - path: {{ $path }}
-{{- if $root.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+{{- if semverCompare ">=1.19" $root.Capabilities.KubeVersion.Version }}
             pathType: Prefix
             backend:
               service:
