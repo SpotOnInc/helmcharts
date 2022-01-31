@@ -43,9 +43,7 @@ spec:
 {{ toYaml . | indent 8 }}
 {{- end }}
     spec:
-{{- if index .Values "serviceAccountName" }}
-      serviceAccountName: {{ .Values.serviceAccountName }}
-{{- end }}
+      serviceAccountName: {{ template "monochart.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.statefulset.terminationGracePeriodSeconds }}
 {{- if .Values.statefulset.affinity }}
       affinity:

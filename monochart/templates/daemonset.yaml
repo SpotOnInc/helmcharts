@@ -38,9 +38,7 @@ spec:
 {{ toYaml .| indent 8 }}
 {{- end }}
     spec:
-{{- if index .Values "serviceAccountName" }}
-      serviceAccountName: {{ .Values.serviceAccountName }}
-{{- end }}
+      serviceAccountName: {{ template "monochart.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
