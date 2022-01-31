@@ -4,7 +4,7 @@ serviceAccount:
   create: false
   annotations:
   labels:
-  name: default
+  name: 
 
 dockercfg:
   enabled: false
