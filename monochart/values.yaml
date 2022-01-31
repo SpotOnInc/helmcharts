@@ -1,10 +1,10 @@
 replicaCount: 1
 
 serviceAccount:
-  create: true
+  create: false
   annotations:
   labels:
-  name:
+  name: default
 
 dockercfg:
   enabled: false
