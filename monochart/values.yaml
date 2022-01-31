@@ -1,7 +1,5 @@
 replicaCount: 1
 
-# serviceAccountName: my-service-account
-
 serviceAccount:
   create: true
   annotations:
