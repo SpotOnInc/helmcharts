@@ -37,7 +37,7 @@ metadata:
 spec:
   rules:
 {{- range $host, $path := $ingress.hosts }}
-    - host: {{ $host }}
+    - host: {{ $host | quote }}
       http:
         paths:
           - path: {{ $path }}
