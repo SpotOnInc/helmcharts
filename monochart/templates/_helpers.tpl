@@ -122,6 +122,13 @@ VolumeMounts template block for deployable resources
 {{- if not ( empty $config.files ) }}
 - mountPath: {{ default (printf "/%s" $name) $config.mountPath }}
   name: config-{{ $name }}-files
+{{/*
+If the mount path ends with one of extensions specified below - we assume it's a regular file so
+we will mount it as a regular file (not a directory).
+  */}}
+{{- if regexMatch ".*.(json|yaml|txt)$" $config.mountPath }}
+  subPath: {{ regexFind "[a-zA-Z0-9_.-]*.(json|yaml|txt)$" $config.mountPath }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}
