@@ -172,7 +172,7 @@ spec:
         {{- end }}
         {{- if .Values.deployment.pod.lifecycle }}
         lifecycle:
-        {{ toYaml .Values.deployment.pod.lifecycle | indent 8 }}
+{{ toYaml .Values.deployment.pod.lifecycle | indent 10 }}
         {{- end }}
 {{- with .Values.deployment.pod.hostAliases }}
       hostAliases:
