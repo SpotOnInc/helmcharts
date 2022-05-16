@@ -129,7 +129,6 @@ deployment:
 
   pod:
     command: []
-    args: []
     # hostAliases:
     #  - ip: "10.1.2.3"
     #    hostnames:
@@ -142,6 +141,7 @@ deployment:
     labels: {}
     # command:
     args: []
+    lifecycle: {}
 
 
 FirstVolumeMounts: {}
