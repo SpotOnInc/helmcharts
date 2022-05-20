@@ -170,6 +170,10 @@ spec:
         {{- with .Values.probes }}
 {{ toYaml . | indent 8 }}
         {{- end }}
+        {{- if .Values.deployment.pod.lifecycle }}
+        lifecycle:
+{{ toYaml .Values.deployment.pod.lifecycle | indent 10 }}
+        {{- end }}
 {{- with .Values.deployment.pod.hostAliases }}
       hostAliases:
 {{ toYaml . | indent 8 }}
