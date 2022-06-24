@@ -2,7 +2,6 @@
 {{- $serviceName := include "common.fullname" . -}}
 {{- range $name, $ingress := .Values.ingress -}}
 {{- if $ingress.enabled }}
-# Check for using "networking.k8s.io/v1" is incorrect - https://github.com/jaegertracing/helm-charts/pull/279
 ---
 {{- if semverCompare ">=1.19" $root.Capabilities.KubeVersion.Version }}
 apiVersion: networking.k8s.io/v1
@@ -16,16 +15,14 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 {{- if $root.Values.IncludeForecastleEnv.enabled }}
-    # Forecastle gives you access to a control panel where you can see your running applications and access them on Kubernetes.
-    # https://github.com/stakater/Forecastle
     # Show the app on the forecastle panel
     forecastle.stakater.com/expose: "true"
-    # Name of the group to put this app.. Use if you want to show in different group  than the namespace.
+    # Name of the group to put this app. Use if you want to show in different group  than the namespace.
     forecastle.stakater.com/group: {{ $root.Values.IncludeForecastleEnv.group }}
     # A comma separated list of name of the forecastle instance. Use when you have multiple forecastle dashboards
     forecastle.stakater.com/instance: {{ $root.Values.IncludeForecastleEnv.instance }}
     # Use a different name, if empty will use the default app name.
-    # forecastle.stakater.com/appName: "emaster-pos-dev-00"
+    forecastle.stakater.com/appName: "{{ $serviceName }}"
 {{- end }}
   labels:
 {{- with $ingress.labels }}
