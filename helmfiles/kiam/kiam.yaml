@@ -41,7 +41,7 @@ releases:
 # to automatically restart kiam pods when the TLS certificates change
 #
 # Here we provision the certificate issuers, and then provision the certificates:
-# Reference:  https://github.com/michas2/kiam/blob/ae9cbeb901e5c2682f17c773f9f965a9fe51720d/docs/TLS.md#cert-manager
+# Reference:  https://github.com/uswitch/kiam/blob/master/docs/TLS.md
 - name: 'kiam-tls'
   chart: "kubernetes-incubator/raw"
   namespace: kube-system
@@ -73,6 +73,8 @@ releases:
             isCA: true
             issuerRef:
               name: kiam-selfsigning-issuer
+            usages:
+            - "any"
 
         - apiVersion: cert-manager.io/v1
           kind: Issuer
@@ -89,12 +91,11 @@ releases:
           spec:
             secretName: kiam-agent-tls
             commonName: agent
-            duration: 2160h # 90d
-            renewBefore: 360h # 15d
-            privateKey:
-              rotationPolicy: Always
             issuerRef:
               name: kiam-ca-issuer
+            usages:
+            - "any"
+
 
         - apiVersion: cert-manager.io/v1
           kind: Certificate
@@ -102,12 +103,10 @@ releases:
             name: kiam-server
           spec:
             secretName: kiam-server-tls
-            duration: 2160h # 90d
-            renewBefore: 360h # 15d
-            privateKey:
-              rotationPolicy: Always
             issuerRef:
               name: kiam-ca-issuer
+            usages:
+            - "any"
             dnsNames:
               - "localhost"
               - "kiam-server"
@@ -182,17 +181,25 @@ releases:
           keyFileName:  tls.key
           caFileName:   ca.crt
         updateStrategy: RollingUpdate
+        log:
+          level: '{{ env "KIAM_AGENT_LOG_LEVEL" | default "info" }}'
         extraArgs:
           # By default, starting with kiam version 3.0, no access is allowed to AWS metadata except the
           # pod's assigned IAM role and corresponding credentials. Here we return to essentially full
           # access to the metadata, while also doing a sanity check on the URL and giving you a template
           # in case you want to restrict access to one section of data.
-          whitelist-route-regexp: '^/(latest/(meta-data|user-data|dynamic)|$)'
+          allow-route-regexp: '^/(latest/(meta-data|user-data|dynamic)|$)'
         extraEnv:
         - name: GRPC_GO_LOG_SEVERITY_LEVEL
           value: '{{ env "GRPC_GO_LOG_SEVERITY_LEVEL" | default "info" }}'
         - name: GRPC_GO_LOG_VERBOSITY_LEVEL
           value: '{{ env "GRPC_GO_LOG_VERBOSITY_LEVEL" | default "1" }}'
+        # Add autodiscovery metrics from datadog
+        podAnnotations:
+          ad.datadoghq.com/kiam-agent.check_names: '["openmetrics"]'
+          ad.datadoghq.com/kiam-agent.init_configs: '[{}]'
+          ad.datadoghq.com/kiam-agent.instances: '[{"prometheus_url":"http://%%host%%:9620/metrics","namespace":"kiam","metrics":["*"]}]'
+
       server:
         # Use chart default version of image if not otherwise specified
         {{- if (env "KIAM_IMAGE_TAG") }}
@@ -207,6 +214,8 @@ releases:
           - key: "node-role.kubernetes.io/master"
             effect: "NoSchedule"
             operator: "Exists"
+        log:
+          level: '{{ env "KIAM_SERVER_LOG_LEVEL" | default "info" }}'
         extraEnv:
         - name: GRPC_GO_LOG_SEVERITY_LEVEL
           value: '{{ env "GRPC_GO_LOG_SEVERITY_LEVEL" | default "info" }}'
@@ -221,6 +230,11 @@ releases:
           keyFileName:  tls.key
           caFileName:   ca.crt
         updateStrategy: RollingUpdate
+        # Add autodiscovery metrics from datadog
+        podAnnotations:
+          ad.datadoghq.com/kiam-server.check_names: '["openmetrics"]'
+          ad.datadoghq.com/kiam-server.init_configs: '[{}]'
+          ad.datadoghq.com/kiam-server.instances: '[{"prometheus_url":"http://%%host%%:9620/metrics","namespace":"kiam","metrics":["*"]}]'
 
 - name: 'kiam-prometheus'
   namespace: kube-system
