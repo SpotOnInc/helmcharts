@@ -48,8 +48,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Labels to use in:
   deploy.spec.selector.matchLabels,
   statefulset.spec.selector.matchLabels,
-  statefulset.spec.volumeClaimTemplates.labels,
-  svc.spec.selector
+  statefulset.spec.volumeClaimTemplates.labels
 */}}
 {{- define "common.labels.short" -}}
 app.kubernetes.io/name: {{ include "common.name" . }}

@@ -29,7 +29,8 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-{{ include "common.labels.short" . | indent 6 }}
+      app.kubernetes.io/name: {{ include "common.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
 {{- with .Values.deployment.strategy }}
   strategy:
 {{ toYaml . | indent 4 }}
