@@ -16,8 +16,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ include "common.name" . }}
-      release: {{ .Release.Name }}
+{{ include "common.labels.short" . | indent 6 }}
   serviceName: {{ include "common.fullname" . }}
   replicas: {{ .Values.replicaCount }}
 {{- with .Values.statefulset.strategy }}
@@ -146,7 +145,7 @@ spec:
 {{ toYaml . | indent 8 }}
 {{- end }}
       labels:
-{{ include "common.labels.standard" . | indent 8 }}
+{{ include "common.labels.short" . | indent 8 }}
 {{- with .Values.statefulset.persistence.labels }}
 {{ toYaml . | indent 8 }}
 {{- end }}
