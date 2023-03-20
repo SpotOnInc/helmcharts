@@ -452,6 +452,7 @@ persistence:
 # Ingress for load balancer
 ingress:
   default:
+    className: nginx
     enabled: false
 #    port: port-name
 #    labels:
