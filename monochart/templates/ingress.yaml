@@ -35,9 +35,6 @@ metadata:
     ingressName: {{ $name }}
   name: {{ include "common.fullname" $root }}-{{ $name }}
 spec:
-{{- if semverCompare ">=1.19" $root.Capabilities.KubeVersion.Version }}
-  ingressClassName: {{ $ingress.className }}
-{{- end }}
   rules:
 {{- range $host, $path := $ingress.hosts }}
     - host: {{ $host | quote }}
