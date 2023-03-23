@@ -453,6 +453,7 @@ persistence:
 ingress:
   default:
     enabled: false
+#    className: nginx # <-- set ingressClass for this ingress resource
 #    port: port-name
 #    labels:
 #      dns: "route53"
