@@ -17,6 +17,7 @@ metadata:
 {{- end }}
 spec:
   activeDeadlineSeconds: {{ default 300 $job.activeDeadlineSeconds }}
+  ttlSecondsAfterFinished:  {{ default 600 $job.ttlSecondsAfterFinished }}
   template:
     metadata:
       name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
