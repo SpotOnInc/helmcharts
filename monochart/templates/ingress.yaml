@@ -25,9 +25,9 @@ metadata:
 {{- with $ingress.labels }}
 {{ toYaml . | indent 4 }}
 {{- end }}
-{{ include "common.labels.standard" . | indent 4 }}
+{{ include "common.labels.standard" $root | indent 4 }}
     ingressName: {{ $name }}
-  name: {{ include "common.fullname" . }}-{{ $name }}
+  name: {{ include "common.fullname" $root }}-{{ $name }}
 spec:
 {{- if and ( hasKey $ingress "className" )}}
   ingressClassName: {{ $ingress.className }}
