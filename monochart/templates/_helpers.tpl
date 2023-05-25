@@ -54,8 +54,8 @@ envFrom:
 {{- end }}
 {{- end -}}
 {{- end }}
-{{- with $root.Values.env }}
 env:
+{{- with $root.Values.env }}
 {{- range $name, $value := . }}
   - name: {{ $name }}
     value: {{ default "" $value | quote }}
