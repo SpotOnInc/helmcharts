@@ -65,7 +65,6 @@ env:
 https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/#use-pod-fields-as-values-for-environment-variables
 */}}
 {{- with $root.Values.envFromFieldRefFieldPath }}
-env:
 {{- range $name, $value := . }}
   - name: {{ $name }}
     valueFrom:
