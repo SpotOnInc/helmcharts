@@ -115,7 +115,7 @@ initcontainers:
   extraInitContainer: {}
 
 deployment:
-  enabled: true
+  enabled: false
   ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}
