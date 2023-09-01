@@ -32,8 +32,8 @@ metadata:
       "forwardConfig":{
         "targetGroups":[{
           "serviceName":"{{ $serviceName }}",
-          "servicePort":{{- if default "<none>" $ingress.port | regexMatch "^[0-9]*$" }} {{ $ingress.port }}
-                        {{- else }} {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
+          "servicePort":{{- if default "<none>" $ingress.port | regexMatch "^[0-9]*$" }} {{ $ingress.port | quote }}
+                        {{- else }} {{ hasKey $ingress "port" | ternary $ingress.port "default" | quote }} 
                         {{- end }},
           "weight":100}
         ]}
