@@ -24,10 +24,8 @@ metadata:
 {{- end }}
 {{- if $ingress.alb_enabled }}
     # Expose paths to public access (without ZScaler)
-  {{- range $host, $paths := $ingress.hosts }}
-    {{- range $idx, $path := $paths }}
     # Note the name (actions.<name>) can't be longer than 63 characters
-    alb.ingress.kubernetes.io/actions.{{ $serviceName }}-{{ $idx }}: '{
+    alb.ingress.kubernetes.io/actions.{{ $serviceName }}-public: '{
       "type":"forward",
       "forwardConfig":{
         "targetGroups":[{
@@ -38,8 +36,6 @@ metadata:
           "weight":100}
         ]}
     }'
-    {{- end }}
-  {{- end }}
     # Block entire traffic except ZScaler users
       # ZScaler Private Access IPs:
       # - 34.238.231.165
@@ -74,12 +70,12 @@ spec:
         paths:
           {{- if $ingress.alb_enabled }}
           # ALB support (EKS)
-          {{- range $idx, $path := $paths }}
-          - path: {{ $path }}
+          {{- range $paths }}
+          - path: {{ . }}
             pathType: Exact
             backend:
               service:
-                name: {{ $serviceName }}-{{ $idx }}
+                name: {{ $serviceName }}-public
                 port:
                   name: use-annotation
           {{- end }}
