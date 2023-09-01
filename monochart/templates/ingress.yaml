@@ -27,7 +27,7 @@ metadata:
   {{- range $host, $paths := $ingress.hosts }}
     {{- range $idx, $path := $paths }}
     # Note the name (actions.<name>) can't be longer than 63 characters
-    alb.ingress.kubernetes.io/actions.{{ $host }}-{{ $idx }}: '{
+    alb.ingress.kubernetes.io/actions.{{ $serviceName }}-{{ $idx }}: '{
       "type":"forward",
       "forwardConfig":{
         "targetGroups":[{
@@ -79,7 +79,7 @@ spec:
             pathType: Exact
             backend:
               service:
-                name: {{ $host }}-{{ $idx }}
+                name: {{ $serviceName }}-{{ $idx }}
                 port:
                   name: use-annotation
           {{- end }}
