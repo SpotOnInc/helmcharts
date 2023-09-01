@@ -26,7 +26,8 @@ metadata:
     # Expose paths to public access (without ZScaler)
   {{- range $host, $paths := $ingress.hosts }}
     {{- range $idx, $path := $paths }}
-    alb.ingress.kubernetes.io/actions.{{ $serviceName }}-{{ $host }}-{{ $idx }}: '{
+    # Note the name (actions.<name>) can't be longer than 63 characters
+    alb.ingress.kubernetes.io/actions.{{ $host }}-{{ $idx }}: '{
       "type":"forward",
       "forwardConfig":{
         "targetGroups":[{
@@ -78,7 +79,7 @@ spec:
             pathType: Exact
             backend:
               service:
-                name: {{ $serviceName }}-{{ $host }}-{{ $idx }}
+                name: {{ $host }}-{{ $idx }}
                 port:
                   name: use-annotation
           {{- end }}
