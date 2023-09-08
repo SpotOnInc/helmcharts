@@ -86,7 +86,7 @@ spec:
       http:
         paths:
           {{\* 
-            Create public URL paths (endpoints) for Application Load Balancer. The condition will veirfy that the
+            Create public URL paths (endpoints) for Application Load Balancer. The condition will verify that the
             ingress class name is as expected.
           */}}
           {{- if or 
