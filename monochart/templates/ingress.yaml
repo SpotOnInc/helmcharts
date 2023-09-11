@@ -32,12 +32,13 @@ metadata:
   or 
   if "kubernetes.io/ingress.class" annotation is present check it's set to use ALB 
 
-  */}}
+  */ }}
   {{- if and 
       ( or 
         (and ( hasKey $ingress "className" ) (eq $ingress.className "alb")) 
         (eq (index $ingress.annotations "kubernetes.io/ingress.class") "alb") 
-      ) (ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal") 
+      ) 
+      (ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal") 
   }}
     # Expose paths to public access (without ZScaler)
     # Note the name (actions.<name>) can't be longer than 63 characters
