@@ -96,8 +96,9 @@ spec:
             {{- if ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal" }}
           # ALB support (EKS)
               {{- range $paths }}
-          - path: {{ . }}
-            pathType: Exact
+                  {{/* use trimSuffix to remove eventual wildcard from the back of the URL path */}}
+          - path: {{ trimSuffix "*" . }}
+            pathType: {{ if hasSuffix "*" . }} Prefix {{ else }} Exact {{ end }}
             backend:
               service:
                 name: {{ $serviceName }}-public
