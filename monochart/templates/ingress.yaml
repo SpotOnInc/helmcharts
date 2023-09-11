@@ -34,7 +34,7 @@ metadata:
 
   */}}
   {{- if or 
-        (and ( hasKey $ingress "className" ) (eq $ingress.className "alb")) 
+        (eq $ingress.className "alb") 
         (eq (index $ingress.annotations "kubernetes.io/ingress.class") "alb") 
   }}
     # Expose paths to public access (without ZScaler)
