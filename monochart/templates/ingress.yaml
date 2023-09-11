@@ -120,7 +120,7 @@ spec:
               ZScaler access (and no public access).
               If there is no URL paths - threat it as the only one path and expose it to public Internet.
             */}}
-          - paths: {{ if kindIs "slice" $paths }} / {{ else }} {{ $paths }} {{ end }}
+          - path: {{ if kindIs "slice" $paths }} / {{ else }} {{ $paths }} {{ end }}
             pathType: Prefix 
             backend:
               service:
