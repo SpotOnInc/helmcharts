@@ -22,7 +22,7 @@ metadata:
     # Use a different name, if empty will use the default app name.
     # forecastle.stakater.com/appName: "emaster-pos-dev-00"
 {{- end }}
-  {{- /* 
+  {{/* 
   Annotations below are necessary for Application Load Balancer to allow access to only ZScaler users and expose only
   some of the choosen URL paths (endpoints).
 
@@ -81,7 +81,7 @@ spec:
   ingressClassName: {{ $ingress.className }}
 {{- end }}
   rules:
-{{- range $host, $paths := $ingress.hosts }}
+    {{- range $host, $paths := $ingress.hosts }}
     - host: {{ $host | quote }}
       http:
         paths:
@@ -131,11 +131,11 @@ spec:
                   name: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
                   {{- end }}
           {{- end }}
-{{- end -}}
-{{- with $ingress.tls }}
+    {{- end -}}
+  {{- with $ingress.tls }}
   tls:
 {{ toYaml . | indent 4 }}
-{{- end -}}
+  {{- end -}}
 {{- end -}}
 
 {{- end -}}
