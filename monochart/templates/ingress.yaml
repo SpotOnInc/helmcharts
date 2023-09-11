@@ -40,6 +40,13 @@ metadata:
         (eq (index $ingress.annotations "kubernetes.io/ingress.class") "alb") 
       )
   }}
+    {{/* 
+      Check if the list of URL paths to expose to public internet is present. If so - make annotations. This loop will
+      run only once. 
+      I have no other idea how to extract $paths from $ingress.hosts thus I use loop that runs once.
+    */}} 
+    {{- range $host, $paths := $ingress.hosts }}
+    {{- if kindIs "slice" $paths }}
     # Expose paths to public access (without ZScaler)
     # Note the name (actions.<name>) can't be longer than 63 characters
     alb.ingress.kubernetes.io/actions.{{ $serviceName }}-public: '{
@@ -68,6 +75,9 @@ metadata:
         ]
       }
     }]'
+      {{ break }}
+    {{- end }}
+    {{- end }}
   {{- end }}
   labels:
 {{- with $ingress.labels }}
@@ -86,14 +96,13 @@ spec:
       http:
         paths:
           {{/* 
-            Create public URL paths (endpoints) for Application Load Balancer. The condition will verify that the
-            ingress class name is as expected.
+            Create public URL paths (endpoints) for Application Load Balancer. The condition will verify if the
+            list of URL paths is present. Skip for internal load balancer.
           */}}
-          {{- if or 
-            (and ( hasKey $ingress "className" ) (eq $ingress.className "alb")) 
-            (eq (index $ingress.annotations "kubernetes.io/ingress.class") "alb") 
+          {{- if and 
+              (ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal") 
+              (kindIs "slice" $paths)
           }}
-            {{- if ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal" }}
           # ALB support (EKS)
               {{- range $paths }}
                   {{/* use trimSuffix to remove eventual wildcard from the back of the URL path */}}
@@ -105,14 +114,14 @@ spec:
                 port:
                   name: use-annotation
               {{- end }}
-          # Part of annotation rule for block entire traffic except for ZScaler users
-            {{- end }}
-          - path: /
-          {{- else }}
-          # A pattern we use with NLB (KOPS mostly)
-          - path: {{ $paths }}
           {{- end }}
-            pathType: Prefix
+          {{/* 
+              If there is URL paths list - they were handled above so here we only add / root path for 
+              ZScaler access (and no public access).
+              If there is no URL paths - threat it as the only one path and expose it to public Internet.
+            */}}
+          - paths: {{ if kindIs "slice" $paths }} / {{ else }} {{ $paths }} {{ end }}
+            pathType: Prefix 
             backend:
               service:
                 name: {{ $serviceName }}
