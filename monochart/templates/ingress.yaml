@@ -85,7 +85,7 @@ spec:
     - host: {{ $host | quote }}
       http:
         paths:
-          {{\* 
+          {{/* 
             Create public URL paths (endpoints) for Application Load Balancer. The condition will verify that the
             ingress class name is as expected.
           */}}
@@ -93,8 +93,9 @@ spec:
             (and ( hasKey $ingress "className" ) (eq $ingress.className "alb")) 
             (eq (index $ingress.annotations "kubernetes.io/ingress.class") "alb") 
           }}
+            {{- if ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal" }}
           # ALB support (EKS)
-          {{- range $paths }}
+              {{- range $paths }}
           - path: {{ . }}
             pathType: Exact
             backend:
@@ -102,8 +103,9 @@ spec:
                 name: {{ $serviceName }}-public
                 port:
                   name: use-annotation
-          {{- end }}
+              {{- end }}
           # Part of annotation rule for block entire traffic except for ZScaler users
+            {{- end }}
           - path: /
             pathType: Prefix
             backend:
