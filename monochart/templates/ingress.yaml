@@ -108,19 +108,10 @@ spec:
           # Part of annotation rule for block entire traffic except for ZScaler users
             {{- end }}
           - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $serviceName }}
-                port:
-                  {{- if default "<none>" $ingress.port | regexMatch "^[0-9]*$" }}
-                  number: {{ $ingress.port }}
-                  {{- else }}
-                  name: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
-                  {{- end }}
           {{- else }}
           # A pattern we use with NLB (KOPS mostly)
           - path: {{ $paths }}
+          {{- end }}
             pathType: Prefix
             backend:
               service:
@@ -131,7 +122,6 @@ spec:
                   {{- else }}
                   name: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
                   {{- end }}
-          {{- end }}
     {{- end -}}
   {{- with $ingress.tls }}
   tls:
