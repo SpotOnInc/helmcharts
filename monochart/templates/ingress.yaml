@@ -44,8 +44,7 @@ spec:
           */}}
           {{- if or 
             (and ( hasKey $ingress "className" ) (eq $ingress.className "alb")) 
-            (eq (index $ingress.annotations "kubernetes.io/ingress.class") "alb") 
-          }}
+            (eq (index $ingress.annotations "kubernetes.io/ingress.class") "alb") }}
             {{- if ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal" }}
           # ALB support (EKS)
               {{- range $paths }}
