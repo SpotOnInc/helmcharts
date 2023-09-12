@@ -22,31 +22,13 @@ metadata:
     # Use a different name, if empty will use the default app name.
     # forecastle.stakater.com/appName: "emaster-pos-dev-00"
 {{- end }}
-  {{/* 
-  Annotations below are necessary for Application Load Balancer to allow access to only ZScaler users and expose only
-  some of the choosen URL paths (endpoints).
-
-  Skip making them if that's internal ALB. Other way check if ingress class is as expected:
-  
-  if className key is present check if value indicate the ALB usage
-  or 
-  if "kubernetes.io/ingress.class" annotation is present check it's set to use ALB 
-
-  */}}
-  {{- if and 
-    (ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal") (
-      or 
-        (and ( hasKey $ingress "className" ) (eq $ingress.className "alb")) 
-        (eq (index $ingress.annotations "kubernetes.io/ingress.class") "alb") 
-      )
-  }}
-    {{/* 
-      Check if the list of URL paths to expose to public internet is present. If so - make annotations. This loop will
-      run only once. 
-      I have no other idea how to extract $paths from $ingress.hosts thus I use loop that runs once.
-    */}} 
-    {{- range $host, $paths := $ingress.hosts }}
-    {{- if kindIs "slice" $paths }}
+{{- /* 
+  Check if the the URL path is a string (NLB notation). If not - user chose to use ALB so let's add annotations.
+  This loop will run only once. 
+  I have no other idea how to extract $paths from $ingress.hosts thus I use 'range' that runs once.
+*/}} 
+{{- range $host, $paths := $ingress.hosts }}
+  {{- if not (kindIs "string" $paths) }}
     # Expose paths to public access (without ZScaler)
     # Note the name (actions.<name>) can't be longer than 63 characters
     alb.ingress.kubernetes.io/actions.{{ $serviceName }}-public: '{
@@ -75,10 +57,12 @@ metadata:
         ]
       }
     }]'
-      {{ break }}
-    {{- end }}
-    {{- end }}
+    {{- break }}
+  {{- else }}
+    {{- /* Prevent loop from running more than once */ -}}
+    {{- break }}
   {{- end }}
+{{- end }}
   labels:
 {{- with $ingress.labels }}
 {{ toYaml . | indent 4 }}
@@ -95,17 +79,14 @@ spec:
     - host: {{ $host | quote }}
       http:
         paths:
-          {{/* 
+          {{- /* 
             Create public URL paths (endpoints) for Application Load Balancer. The condition will verify if the
-            list of URL paths is present. Skip for internal load balancer.
+            list of URL paths is present.
           */}}
-          {{- if and 
-              (ne (index $ingress.annotations "alb.ingress.kubernetes.io/scheme") "internal") 
-              (kindIs "slice" $paths)
-          }}
+          {{- if kindIs "slice" $paths }}
           # ALB support (EKS)
-              {{- range $paths }}
-                  {{/* use trimSuffix to remove eventual wildcard from the back of the URL path */}}
+            {{- range $paths }}
+                  {{- /* use trimSuffix to remove eventual wildcard from the back of the URL path */}}
           - path: {{ trimSuffix "*" . }}
             pathType: {{ if hasSuffix "*" . }} Prefix {{ else }} Exact {{ end }}
             backend:
@@ -113,15 +94,20 @@ spec:
                 name: {{ $serviceName }}-public
                 port:
                   name: use-annotation
-              {{- end }}
+            {{- end }}
           {{- end }}
-          {{/* 
-              If there is URL paths list - they were handled above so here we only add / root path for 
-              ZScaler access (and no public access).
-              If there is no URL paths - threat it as the only one path and expose it to public Internet.
+          {{- /* 
+              If $paths variable is type different than string we assume user want to use ALB. In this case we want to
+              protect access to all URL paths ('.../*') with ZScaler. This rule apply as the last one as it is the most 
+              general.
+
+              Else 
+              
+              assume $paths is a single string (single path). We use it for NLB and for ALB to expose all host's URL
+              paths to public Internet.
             */}}
-          - path: {{ if kindIs "slice" $paths }} / {{ else }} {{ $paths }} {{ end }}
-            pathType: Prefix 
+          - path: {{- if not (kindIs "string" $paths) }} / {{- else }} {{ $paths }} {{- end }}
+            pathType: Prefix
             backend:
               service:
                 name: {{ $serviceName }}
