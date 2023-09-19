@@ -5,7 +5,7 @@ on:
       - "docs/**"
 jobs:
   main:
-    runs-on: [self-hosted, "Amazon Linux 2", corp] # Must run on our self-hosted Github Runners
+    runs-on: [self-hosted, eks-runner, corp, x-large] # Must run on our self-hosted Github Runners
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
