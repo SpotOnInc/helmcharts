@@ -1,0 +1,10 @@
+site_name: helmcharts
+
+nav:
+  # Automatically build structure
+  # See https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
+  - ...
+
+# https://github.com/mkdocs/mkdocs/wiki/MkDocs-Plugins
+plugins:
+  - awesome-pages
