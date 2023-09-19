@@ -1,0 +1,16 @@
+name: "Validate Techdocs Build"
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+jobs:
+  main:
+    runs-on: [self-hosted, "Amazon Linux 2", corp] # Must run on our self-hosted Github Runners
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Validate techdocs"
+        uses: spotoninc/github-action-publish-docs@main
+        with:
+          dry-run: "true"
