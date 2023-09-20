@@ -23,5 +23,5 @@ metadata:
       
 spec:
   type: library
-  owner: group:default/devops
+  owner: group:default/ops
   lifecycle: production
