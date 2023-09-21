@@ -284,7 +284,7 @@ Then, we have to update `hosts` section. There are 2 notations supported.
               '{{ $domain }}':
                 {{- if index $root.Values "public_paths" }}
                   {{- range $path := $root.Values.public_paths }}
-                - '{{ . }}'
+                - '{{ $path }}'
                   {{- end }}
                 {{- end }}
               {{- end }}
