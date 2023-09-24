@@ -2,6 +2,14 @@
 {{- $serviceName := include "common.fullname" . -}}
 {{- range $name, $ingress := .Values.ingress -}}
 {{- if $ingress.enabled }}
+{{/* 
+    parallel deployment to kOps and EKS operate on a basis of 'who owns the external-dns?'
+    in this chart version, kOps is the default platform.
+    EKS deployments are automagically updated to remove the conflicting annotation
+*/}}
+{{- if include "isEKS" . }}
+  {{- $ingress.annotations := include "filterDict" ( list $ingress.annotations "external-dns.alpha.kubernetes.io/target") }}
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
