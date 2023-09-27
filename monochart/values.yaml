@@ -120,6 +120,7 @@ deployment:
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}
   revisionHistoryLimit: 10
+  minReadySeconds: 0
   # annotations:
   #   name: value
   # labels:
