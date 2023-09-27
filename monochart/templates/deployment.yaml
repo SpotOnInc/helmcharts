@@ -36,6 +36,7 @@ spec:
 {{ toYaml . | indent 4 }}
 {{- end }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  minReadySeconds: {{ .Values.deployment.minReadySeconds }}
   template:
     metadata:
       name: {{ include "common.fullname" . }}
