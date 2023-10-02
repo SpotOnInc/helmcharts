@@ -171,33 +171,3 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
-
-{{/*
-detect if the chart is being deployed to EKS
-*/}}
-{{- define "isEKS" -}}
-{{- if hasKey .Values "nodeSelector" -}}
-  {{- if hasKey .Values.nodeSelector "eks.amazonaws.com/nodegroup" -}}
-    true
-  {{- else }}
-    false
-  {{- end }}
-{{- else }}
-  false
-{{- end }}
-{{- end -}}
-
-{{/*
-filter a key from a dictionary
-*/}}
-{{- define "filterDict" -}}
-  {{- $inDict := index . 0 -}}
-  {{- $target := index . 1 -}}
-  {{- $outDict := dict -}}
-  {{- range $key, $value := $inDict }}
-    {{- if not (strings.Contains $key $target) }}
-      {{- $outDict[$key] = $value }}
-    {{- end }}
-  {{- end }}
-  {{- $outDict }}
-{{- end -}}
