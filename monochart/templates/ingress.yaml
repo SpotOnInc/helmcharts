@@ -8,7 +8,9 @@
     EKS deployments are automagically updated to remove the conflicting annotation
 */}}
 {{- if include "isEKS" . }}
-  {{- $ingress.annotations := include "filterDict" ( list $ingress.annotations "external-dns.alpha.kubernetes.io/target") }}
+  {{- range $annotations := $ingress.annotations }}
+    {{- $annotations = include "filterDict" ( list $annotations "external-dns.alpha.kubernetes.io/target") }}
+  {{- end }}
 {{- end }}
 ---
 apiVersion: networking.k8s.io/v1

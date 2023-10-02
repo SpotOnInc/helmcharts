@@ -195,8 +195,8 @@ filter a key from a dictionary
   {{- $target := index . 1 -}}
   {{- $outDict := dict -}}
   {{- range $key, $value := $inDict }}
-    {{- if not (strings.Contains $key $target) }}
-      {{- $outDict[$key] = $value }}
+    {{- if not (contains $key $target) }}
+      {{ set $outDict $key $value }}
     {{- end }}
   {{- end }}
   {{- $outDict }}
