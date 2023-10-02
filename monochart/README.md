@@ -1,12 +1,11 @@
 # Monochart
 
 ## Introduction
-We have to made a fork from https://github.com/cloudposse/charts/tree/master/incubator/monochart, because the CP chart is a bit outdate and don't include all the parameters that we need, like sealedsecrets, initconatiners and networkpolices.
-
+Forked from https://github.com/cloudposse/charts/tree/master/incubator/monochart 
 ## Changes
 
 ### common.labels
-We have changed the common.labes from:
+We have changed the common.labels from:
 
 |before|now|
 |-|-|
@@ -132,46 +131,3 @@ releases:
 ```
 
 These configuration will generate two CMF (ConfigMapsFiles) called **The_Name_of_the_Resource** and **pos-config-template** with the content of the **/path/relative/to/manifest** and **files/pos-config-template.json** respectively.
-
-
-## TODO:
-
-### Helm git plugin
-Helm/helmfile have a plugin that allow use a git repository as a helm chart repository directly.
-This works very easy when you have a public git repository, but in our case, our [helmchart](https://github.com/SpotOnInc/helmcharts/) repository is private and that have generate some problem to access it from CD.
-
-To workaround it, we have followed the idea from @JB to make a clone from the helmchart repository inside of the CD and use this local directory as chart. For example:
-
-```yaml
-# helmfile with public git chart repository.
-repositories:
-  # Spoton helmcharts repository
-  - name: spoton-git
-    url: "git+ssh://git@github.com/
-
-releases:
-  - name: test
-    # the chart this release uses
-    chart: "spoton-git/spoton-monochart
-    version: 1.1.1
-```
-
-the workaround one time that we have the repository cloned
-```yaml
-# helmfile with public git chart repository.
-# repositories:
-#   # Spoton helmcharts repository
-#   - name: spoton-git
-#     url: "git+ssh://git@github.com/
-
-releases:
-  - name: test
-    # the chart this release uses
-    chart: "/codefresh/volume/helmcharts/monochart"
-    version : 1.1.1
-```
-
-This work good for now, **but maybe in the future** we will have performance problem if the repository grow up in size.
-
-### Include DataDog enviroment by default.
-### Include networkpolices on templates.
