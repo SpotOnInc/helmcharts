@@ -143,6 +143,7 @@ deployment:
     # command:
     args: []
     lifecycle: {}
+    hostPID: false
 
 
 FirstVolumeMounts: {}
