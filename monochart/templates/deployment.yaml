@@ -62,7 +62,9 @@ spec:
 
     spec:
       serviceAccountName: {{ template "monochart.serviceAccountName" . }}
-      hostPID: "{{ .Values.deployment.pod.hostPID }}"
+      {{- if .Values.deployment.pod.hostPID }}
+        hostPID: true
+      {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
