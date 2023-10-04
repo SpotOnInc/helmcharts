@@ -454,6 +454,10 @@ persistence:
 ingress:
   default:
     enabled: false
+    zscalerProxyIPs: 
+      - "34.238.231.165/32" 
+      - "34.202.59.188/32" 
+      - "34.197.162.237/32"
 #    className: nginx # <-- set ingressClass for this ingress resource
 #    port: port-name
 #    labels:
