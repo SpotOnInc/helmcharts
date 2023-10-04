@@ -48,7 +48,7 @@ metadata:
       "field":"source-ip",
       "sourceIpConfig": {
         "values":[
-          {{ $ingress.zscalerProxyIPs | default "34.238.231.165/32, 34.202.59.188/32, 34.197.162.237/32" }}
+          {{ $ingress.zscalerProxyIPs | default ( printf "\"%s\", \"%s\", \"%s\"" "34.238.231.165/32" "34.202.59.188/32" "34.197.162.237/32" ) }}
         ]
       }
     }]'
