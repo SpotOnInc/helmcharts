@@ -309,6 +309,34 @@ Then, we have to update `hosts` section. There are 2 notations supported.
       uses list of `public_paths` to expose a production endpoint to public Internet. It's necessary for customer's
       browser to reach to this endpoint.
 
+#### Use non-default ZScaler proxy IP addresses
+
+By default ZScaler Proxy IP addresses work for most environments. However, if that require customization an example
+below explains how it can be achieved in helmfile.
+
+1. Create `zscalerProxyIPs` variable in your helmfile. 
+
+  ```yaml
+  environments:
+    pci-unlimited:
+      values:
+        - zscalerProxyIPs: 
+          - 54.82.104.143/32
+          - 54.86.79.65/32
+  ```
+
+1. Loop through values of this variable in `ingress` declaration
+
+  ```yaml
+    ingress:
+      default:
+        enabled: true
+        zscalerProxyIPs: 
+        {{ range .Values.zscalerProxyIPs }}
+          - {{ . }}
+        {{ end }}
+  ```
+
 ## TODO
 
 ### Helm git plugin
