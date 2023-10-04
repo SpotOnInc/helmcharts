@@ -43,10 +43,7 @@ metadata:
         ]}
     }'
     # Block entire traffic except ZScaler users
-      # ZScaler Private Access IPs:
-      # - 34.238.231.165
-      # - 34.202.59.188
-      # - 34.197.162.237
+      # ZScaler Private Access IPs as below
     alb.ingress.kubernetes.io/conditions.{{ $serviceName }}: '[{
       "field":"source-ip",
       "sourceIpConfig": {

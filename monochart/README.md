@@ -1,12 +1,11 @@
 # Monochart
 
 ## Introduction
-We have to made a fork from https://github.com/cloudposse/charts/tree/master/incubator/monochart, because the CP chart is a bit outdate and don't include all the parameters that we need, like sealedsecrets, initconatiners and networkpolices.
-
+Forked from https://github.com/cloudposse/charts/tree/master/incubator/monochart 
 ## Changes
 
 ### common.labels
-We have changed the common.labes from:
+We have changed the common.labels from:
 
 |before|now|
 |-|-|

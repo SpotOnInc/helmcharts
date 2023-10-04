@@ -1,0 +1,27 @@
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-component
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: helmcharts
+  description: | 
+    Helm chart repository for Spoton projects. A home of Monochart that we're using to deploy every Spoton project.
+  
+  annotations:
+    github.com/project-slug: spotoninc/helmcharts
+  
+    backstage.io/techdocs-ref: dir:..
+  
+  tags:
+    - go-template # language
+    - helmfile # framework
+  links:
+    
+    - title: "Slack (#devops)"
+      type: contact
+      url: https://spoton.slack.com/archives/CFBPX8NMQ
+      icon: chat
+      
+spec:
+  type: library
+  owner: group:default/ops
+  lifecycle: production

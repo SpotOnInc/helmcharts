@@ -1,0 +1,16 @@
+name: "Validate Techdocs Build"
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+jobs:
+  main:
+    runs-on: [self-hosted, eks-runner, corp, medium]  # Must run on our self-hosted Github Runners
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+
+      - name: "Validate techdocs"
+        uses: spotoninc/github-action-publish-docs@main
+        with:
+          dry-run: "true"
