@@ -1,0 +1,19 @@
+apiVersion: v2
+name: keycloak-gatekeeper
+version: 4.0.0
+description: Keycloak gatekeeper
+home: https://www.keycloak.org
+sources:
+  - https://github.com/keycloak/keycloak-containers
+  - https://github.com/keycloak/keycloak-gatekeeper
+keywords:
+  - authentication
+  - authorization
+  - keycloak
+  - proxy
+maintainers:
+  - name: gabibbo97
+    email: gabibbo97@gmail.com
+icon: https://raw.githubusercontent.com/keycloak/keycloak-misc/master/logo/keycloak_logo_600px.svg
+appVersion: "10.0.0"
+deprecated: true
