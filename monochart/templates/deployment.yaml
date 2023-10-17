@@ -65,6 +65,7 @@ spec:
       {{- if .Values.deployment.pod.hostPID }}
       hostPID: true
       {{- end }}
+      terminationGracePeriodSeconds: {{.Values.deployment.pod.terminationGracePeriodSeconds }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
