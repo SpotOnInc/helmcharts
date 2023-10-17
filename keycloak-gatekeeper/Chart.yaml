@@ -12,8 +12,8 @@ keywords:
   - keycloak
   - proxy
 maintainers:
-  - name: gabibbo97
-    email: gabibbo97@gmail.com
+  - name: Spoton DevOps
+    email: devops@spoton.com
 icon: https://raw.githubusercontent.com/keycloak/keycloak-misc/master/logo/keycloak_logo_600px.svg
 appVersion: "10.0.0"
 deprecated: true
