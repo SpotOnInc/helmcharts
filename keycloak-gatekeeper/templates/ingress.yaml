@@ -1,11 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "keycloak-gatekeeper.fullname" . -}}
 {{- $ingressPath := .Values.ingress.path -}}
-{{- if or (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress") (not (.Capabilities.APIVersions.Has "extensions/v1beta1/Ingress")) }}
-apiVersion: networking.k8s.io/v1beta1
-{{- else }}
-apiVersion: extensions/v1beta1
-{{- end }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -32,7 +28,9 @@ spec:
         paths:
           - path: {{ $ingressPath }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
   {{- end }}
 {{- end }}

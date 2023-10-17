@@ -2,23 +2,11 @@
 
 [Keycloak gatekeeper](https://github.com/keycloak/keycloak-gatekeeper) is an authentication proxy service which at the risk of stating the obvious integrates with the Keycloak authentication service.
 
-## COPIED NOTICE
+## NOTICE
 
 This chart was copied from: https://github.com/gabibbo97/charts/tree/master/charts/keycloak-gatekeeper
 
 Keycloak Gatekeeper (renamed in `Louketo Proxy`) has been [deprecated by their authors](https://www.keycloak.org/2020/08/sunsetting-louketo-project.adoc)
-
-## TL;DR
-
-```bash
-helm install gabibbo97/keycloak-gatekeeper \
-    --set discoveryURL=https://keycloak.example.com/auth/realms/myrealm \
-    --set upstreamURL=http://my-svc.my-namespace.svc.cluster.local:8088 \
-    --set ClientID=myOIDCClientID \
-    --set ClientSecret=deadbeef-b000-1337-abcd-aaabacadaeaf \
-    --set ingress.enabled=true \
-    --set ingress.hosts[0]=my-svc-auth.example.com
-```
 
 ## Upgrade notes
 
