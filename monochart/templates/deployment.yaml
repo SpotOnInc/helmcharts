@@ -180,3 +180,6 @@ spec:
       {{- end }}
       {{- include "monochart.files.volumes" . | nindent 6 }}
 {{- end -}}
+      {{- if .Values.sideCars }}
+{{ tpl .Values.sideCars . | indent 6 }}
+      {{- end }}
