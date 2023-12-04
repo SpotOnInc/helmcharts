@@ -43,14 +43,16 @@ metadata:
         ]}
     }'
     # Block entire traffic except ZScaler users
-      # ZScaler Private Access IPs as below
     alb.ingress.kubernetes.io/conditions.{{ $serviceName }}: '[{
       "field":"source-ip",
       "sourceIpConfig": {
         "values":[
-          "34.238.231.165/32",
-          "34.202.59.188/32",
-          "34.197.162.237/32"
+          {{- /* get first element of ZScaler proxy IP list. It doesn't require a comma */ -}}
+          {{- first $ingress.zscalerProxyIPs | quote -}}
+          {{- /* get other elements. They will require comma before the value */ -}}
+          {{- range ( rest $ingress.zscalerProxyIPs ) -}}
+            , {{- . | quote -}}
+          {{- end -}}
         ]
       }
     }]'

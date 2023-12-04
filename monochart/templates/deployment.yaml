@@ -62,6 +62,10 @@ spec:
 
     spec:
       serviceAccountName: {{ template "monochart.serviceAccountName" . }}
+      {{- if .Values.deployment.pod.hostPID }}
+      hostPID: true
+      {{- end }}
+      terminationGracePeriodSeconds: {{.Values.deployment.pod.terminationGracePeriodSeconds }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
@@ -176,3 +180,6 @@ spec:
       {{- end }}
       {{- include "monochart.files.volumes" . | nindent 6 }}
 {{- end -}}
+      {{- if .Values.sideCars }}
+{{ tpl .Values.sideCars . | indent 6 }}
+      {{- end }}

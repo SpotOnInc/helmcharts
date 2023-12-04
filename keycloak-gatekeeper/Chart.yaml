@@ -1,0 +1,19 @@
+apiVersion: v2
+name: keycloak-gatekeeper
+version: 4.0.1
+description: Keycloak gatekeeper
+home: https://www.keycloak.org
+sources:
+  - https://github.com/keycloak/keycloak-containers
+  - https://github.com/keycloak/keycloak-gatekeeper
+keywords:
+  - authentication
+  - authorization
+  - keycloak
+  - proxy
+maintainers:
+  - name: Spoton DevOps
+    email: devops@spoton.com
+icon: https://raw.githubusercontent.com/keycloak/keycloak-misc/master/logo/keycloak_logo_600px.svg
+appVersion: "10.0.0"
+deprecated: true
