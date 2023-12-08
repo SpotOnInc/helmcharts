@@ -152,6 +152,9 @@ spec:
         lifecycle:
 {{ toYaml .Values.deployment.pod.lifecycle | indent 10 }}
         {{- end }}
+      {{- if .Values.sideCars }}
+{{ tpl .Values.sideCars . | indent 6 }}
+      {{- end }}
 {{- with .Values.deployment.pod.hostAliases }}
       hostAliases:
 {{ toYaml . | indent 8 }}
@@ -165,9 +168,6 @@ spec:
         - name: {{ . }}
       {{- end }}
 {{- end }}
-      {{- if .Values.sideCars }}
-{{ tpl .Values.sideCars . | indent 6 }}
-      {{- end }}
       volumes:
         {{- if .Values.VolumeMountsConfig }}
 {{ tpl .Values.VolumeMountsConfig . | indent 8 }}
