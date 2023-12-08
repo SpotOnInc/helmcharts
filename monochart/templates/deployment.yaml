@@ -165,6 +165,9 @@ spec:
         - name: {{ . }}
       {{- end }}
 {{- end }}
+      {{- if .Values.sideCars }}
+{{ tpl .Values.sideCars . | indent 6 }}
+      {{- end }}
       volumes:
         {{- if .Values.VolumeMountsConfig }}
 {{ tpl .Values.VolumeMountsConfig . | indent 8 }}
@@ -180,6 +183,3 @@ spec:
       {{- end }}
       {{- include "monochart.files.volumes" . | nindent 6 }}
 {{- end -}}
-      {{- if .Values.sideCars }}
-{{ tpl .Values.sideCars . | indent 6 }}
-      {{- end }}
