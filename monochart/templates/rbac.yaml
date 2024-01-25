@@ -5,7 +5,6 @@
 
 {{ if .Values.rbacRole.clusterWide }}
 
-
 {{/* Cluster-wide permissions for service account */}}
 
 apiVersion: rbac.authorization.k8s.io/v1
@@ -30,14 +29,13 @@ roleRef:
 
 {{ else }}
 
-
 {{/* Permissions for the service account within given namespace */}}
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ template "monochart.serviceAccountName" . }}-role
-  namespace: {{ .Release.Namespace }}
+  namespace: {{if eq .Values.rbacRole.namespace ""}}{{.Release.Namespace }}{{else}}{{.Values.rbacRole.namespace}}{{end}}
 rules:
 {{ .Values.rbacRole.rules }}
 ---
@@ -45,7 +43,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ template "monochart.serviceAccountName" . }}-rolebinding
-  namespace: {{ .Release.Namespace }}
+  namespace: {{if eq .Values.rbacRole.namespace ""}}{{.Release.Namespace }}{{else}}{{.Values.rbacRole.namespace}}{{end}}
 subjects:
 - kind: ServiceAccount
   name: {{ template "monochart.serviceAccountName" . }}
