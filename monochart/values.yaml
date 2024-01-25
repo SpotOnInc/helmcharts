@@ -5,6 +5,48 @@ serviceAccount:
   annotations:
   labels:
   name: 
+  namespacedRules: ""
+  # namespacedRules: |
+  #   - apiGroups:
+  #     - ""
+  #     resources:
+  #     - pods/exec
+  #     verbs:
+  #     - create
+  #   - apiGroups:
+  #     - apps
+  #     resources:
+  #     - deployments
+  #     verbs:
+  #     - get
+  #     - list
+  #     - create	
+  #     - delete	
+  #     - deletecollection	
+  #     - patch	
+  #     - update	
+  #     - watch
+  clusterWideRules: ""
+  # clusterWideRules: |
+  #   - apiGroups:
+  #     - ""
+  #     resources:
+  #     - pods/exec
+  #     verbs:
+  #     - create
+  #   - apiGroups:
+  #     - apps
+  #     resources:
+  #     - deployments
+  #     verbs:
+  #     - get
+  #     - list
+  #     - create	
+  #     - delete	
+  #     - deletecollection	
+  #     - patch	
+  #     - update	
+  #     - watch
 
 dockercfg:
   enabled: false
