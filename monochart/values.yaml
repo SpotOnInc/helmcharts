@@ -4,30 +4,17 @@ serviceAccount:
   create: false
   annotations:
   labels:
-  name: 
-  namespacedRules: ""
-  # namespacedRules: |
-  #   - apiGroups:
-  #     - ""
-  #     resources:
-  #     - pods/exec
-  #     verbs:
-  #     - create
-  #   - apiGroups:
-  #     - apps
-  #     resources:
-  #     - deployments
-  #     verbs:
-  #     - get
-  #     - list
-  #     - create	
-  #     - delete	
-  #     - deletecollection	
-  #     - patch	
-  #     - update	
-  #     - watch
-  clusterWideRules: ""
-  # clusterWideRules: |
+  name:     
+
+# If you want to deploy the rbac to service account with specific name but you don't want to create service account just
+# keep the above serviceAccount `create: false` but provide `name:` parameter.
+rbacRole:
+  create: false
+  clusterWide: false
+  rules: ""
+  # namespace: "some-namespace" # skip for cluster wide access (it will create clusterrole rather than namespaced role)
+  # serviceAccountName: "" # skip to attach role to serviceAccount created in this chart (defined above)
+  # rules: |
   #   - apiGroups:
   #     - ""
   #     resources:
