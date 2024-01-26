@@ -337,6 +337,79 @@ below explains how it can be achieved in helmfile.
         {{ end }}
   ```
 
+### RBAC (Role based access control)
+
+Role is a way to provide permission to Service Account to manipulate Kubernetes resources. For example we can let our
+pod to create/delete deployment on our behalf (as a part of CI/CD process) or schedule to delete development pods for
+the weekend.
+
+You can deploy Kubernetes Roles/ClusterRoles and Role bindings/Cluster role bindings with monochart. There are 3 use
+cases that are covered:
+
+1. Deploy service account with role permissions.
+1. Attach role to existing service account.
+1. Deploy role and role binding to another namespace and attach it to existing service account.
+
+#### 1. Deploy service account with role permissions
+
+In this scenario monochart will create service account with role attached to it via role binding.
+
+```yaml
+serviceAccount:
+  create: true  
+
+rbacRole:
+  create: true
+  clusterWide: false # whether to create Role/RoleBinding or ClusterRole/ClusterRoleBinding
+  namespace: ""
+  rules: |
+    - apiGroups:
+      - apps
+      resources:
+      - deployments
+      verbs:
+      - get
+      - list
+```
+
+#### 2. Attach role to existing service account
+
+Monochart won't create a new service account but it will just create role and role binding. It's useful if the service
+account is managed in another helm release and we want to provide additional permissions without altering existing
+release.
+
+Note the `serviceAccount.create` is `false` and the `serviceAccount.name` parameter is populated.
+
+```yaml
+serviceAccount:
+  create: false
+  name: existing-service-account
+
+rbacRole:
+  create: true
+  clusterWide: false
+  namespace: "existing-namespace"
+  rules: |
+    - apiGroups:
+      - apps
+      resources:
+      - deployments
+      verbs:
+      - get
+      - list
+```
+
+#### 3. Deploy role and role binding to another namespace
+
+We want to give a service account permission to access/alter Kubernetes resources in another namespace. Example: we want
+our CI/CD worker pod to create a deployment in another namespace.
+
+Note the `serviceAccount.create` is `false`, the `serviceAccount.name` and `serviceAccount.namespace` parameters are
+provided.
+
+
+
+
 ## TODO
 
 ### Helm git plugin
