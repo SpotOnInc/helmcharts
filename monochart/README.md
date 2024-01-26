@@ -388,7 +388,7 @@ serviceAccount:
 rbacRole:
   create: true
   clusterWide: false
-  namespace: "existing-namespace"
+  namespace: ""
   rules: |
     - apiGroups:
       - apps
@@ -407,8 +407,24 @@ our CI/CD worker pod to create a deployment in another namespace.
 Note the `serviceAccount.create` is `false`, the `serviceAccount.name` and `serviceAccount.namespace` parameters are
 provided.
 
+```yaml
+serviceAccount:
+  create: false
+  name: existing-service-account
 
-
+rbacRole:
+  create: true
+  clusterWide: false
+  namespace: "existing-namespace"
+  rules: |
+    - apiGroups:
+      - apps
+      resources:
+      - deployments
+      verbs:
+      - get
+      - list
+```
 
 ## TODO
 
