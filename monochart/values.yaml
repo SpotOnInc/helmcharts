@@ -13,8 +13,7 @@ rbacRole:
   clusterWide: false
   namespace: ""
   rules: ""
-  # namespace: "some-namespace" # skip for cluster wide access (it will create clusterrole rather than namespaced role)
-  # serviceAccountName: "" # skip to attach role to serviceAccount created in this chart (defined above)
+  # namespace: "some-namespace"
   # rules: |
   #   - apiGroups:
   #     - ""
