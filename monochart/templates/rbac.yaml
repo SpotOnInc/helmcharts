@@ -1,0 +1,57 @@
+{{/* Role based access control */}}
+
+{{ if .Values.rbacRole.create }}
+---
+
+{{ if .Values.rbacRole.clusterWide }}
+
+{{/* Cluster-wide permissions for service account */}}
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "monochart.serviceAccountName" . }}-clusterrole
+rules:
+{{ .Values.rbacRole.rules }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "monochart.serviceAccountName" . }}-clusterrolebinding
+subjects:
+- kind: ServiceAccount
+  name: {{ template "monochart.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ template "monochart.serviceAccountName" . }}-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+
+{{ else }}
+
+{{/* Permissions for the service account within given namespace */}}
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "monochart.serviceAccountName" . }}-role
+  namespace: {{if eq .Values.rbacRole.namespace ""}}{{.Release.Namespace }}{{else}}{{.Values.rbacRole.namespace}}{{end}}
+rules:
+{{ .Values.rbacRole.rules }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "monochart.serviceAccountName" . }}-rolebinding
+  namespace: {{if eq .Values.rbacRole.namespace ""}}{{.Release.Namespace }}{{else}}{{.Values.rbacRole.namespace}}{{end}}
+subjects:
+- kind: ServiceAccount
+  name: {{ template "monochart.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ template "monochart.serviceAccountName" . }}-role
+  apiGroup: rbac.authorization.k8s.io
+
+{{ end }}
+{{ end }}

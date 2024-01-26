@@ -4,7 +4,36 @@ serviceAccount:
   create: false
   annotations:
   labels:
-  name: 
+  name:     
+
+# If you want to deploy the rbac to service account with specific name but you don't want to create service account just
+# keep the above serviceAccount `create: false` but provide `name:` parameter.
+rbacRole:
+  create: false
+  clusterWide: false
+  namespace: ""
+  rules: ""
+  # namespace: "some-namespace"
+  # rules: |
+  #   - apiGroups:
+  #     - ""
+  #     resources:
+  #     - pods/exec
+  #     verbs:
+  #     - create
+  #   - apiGroups:
+  #     - apps
+  #     resources:
+  #     - deployments
+  #     verbs:
+  #     - get
+  #     - list
+  #     - create	
+  #     - delete	
+  #     - deletecollection	
+  #     - patch	
+  #     - update	
+  #     - watch
 
 dockercfg:
   enabled: false
