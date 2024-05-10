@@ -1,3 +1,5 @@
+{{- $root := . -}}
+
 {{- if .Values.filterPolicy.enabled -}}
 apiVersion: getambassador.io/v3alpha1
 kind: FilterPolicy
@@ -23,7 +25,7 @@ spec:
           namespace: ambassador-apigateway
           onDeny: continue
           onAllow: break
-        - name: ambassador-apigateway-{{ include "common.fullname" . }}-{{ $.Release.Namespace }}-okta-sso-filter
+        - name: ambassador-apigateway-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
           namespace: ambassador-apigateway
     {{- end }}
     - host: "{{ .Values.filterPolicy.host }}"
