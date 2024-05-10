@@ -1,0 +1,23 @@
+{{- if .Values.mapping.enabled -}}
+apiVersion: getambassador.io/v3alpha1
+kind: Mapping
+metadata:
+  name: {{ include "common.fullname" . }}
+{{- with .Values.mapping.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.mapping.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+    host: apigw
+spec:
+  prefix: /
+  host: {{ .Values.mapping.host }}
+  ambassador_id: [ ambassador-apigateway ]
+  timeout_ms: 60000
+  connect_timeout_ms: 60000
+  service: {{ include "common.fullname" . }}.{{ Release.Namespace }}.svc.cluster.local
+{{- end -}}
