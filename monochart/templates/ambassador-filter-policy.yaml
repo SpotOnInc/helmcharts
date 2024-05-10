@@ -15,9 +15,9 @@ metadata:
 spec:
   ambassador_id: ambassador-apigateway
   rules:
-    {{- range .Values.filterPolicy.excludePaths }}
+    {{- range $path := $.Values.filterPolicy.excludePaths }}
     - host: {{ $.Values.filterPolicy.host }}
-      path: {{ quote . }}
+      path: {{ quote $path }}
       filters:
         - name: ambassador-apigateway-okta-central-filter
           namespace: ambassador-apigateway
