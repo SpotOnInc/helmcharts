@@ -19,5 +19,5 @@ spec:
   ambassador_id: [ ambassador-apigateway ]
   timeout_ms: 60000
   connect_timeout_ms: 60000
-  service: {{ include "common.fullname" . }}.{{ Release.Namespace }}.svc.cluster.local
+  service: {{ include "common.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
 {{- end -}}
