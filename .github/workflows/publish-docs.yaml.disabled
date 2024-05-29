@@ -9,7 +9,7 @@ on:
 
 jobs:
   main:
-    runs-on: [self-hosted, eks-runner, corp, medium] # Must run on our self-hosted Github Runners
+    runs-on: medium # Spotoninc runners aren't enabled for public repos. This workflow may not work.
     steps:
       - name: "Checkout"
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
@@ -21,4 +21,4 @@ jobs:
           aws-region: us-east-1
 
       - name: "Publish techdocs"
-        uses: spotoninc/github-action-publish-docs@main
+        uses: spotoninc/github-action-publish-docs@v1
