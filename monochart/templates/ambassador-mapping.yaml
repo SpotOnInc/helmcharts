@@ -1,23 +1,31 @@
-{{- if .Values.mapping.enabled -}}
-apiVersion: getambassador.io/v3alpha1
+{{- $root := . -}}
+{{- if .Values.mapping -}}
+{{- range $name, $mapping := .Values.mapping -}}
+{{- if $mapping.enabled }}
+---
+apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
-  name: {{ include "common.fullname" . }}
-{{- with .Values.mapping.annotations }}
+  name: {{ $name }}
+  namespace: {{ $root.Release.Namespace }}
+{{- with $mapping.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" . | indent 4 }}
-{{- with .Values.mapping.labels }}
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $mapping.labels }}
 {{ toYaml .| indent 4 }}
 {{- end }}
-    host: apigw
 spec:
-  prefix: /
-  host: {{ .Values.mapping.host }}
-  ambassador_id: [ ambassador-apigateway ]
+  host: TODO-need-pattern
+  prefix: {{ $mapping.prefix | default "/" }}
+  grpc: {{ $mapping.grpc | default false }}
+  {{- if $mapping.rewrite }}
+  rewrite: {{ $mapping.rewrite }}
+  {{- end }}
+  service: {{ include "common.fullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local
   timeout_ms: 60000
-  connect_timeout_ms: 60000
-  service: {{ include "common.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+{{- end -}}
+{{- end -}}
 {{- end -}}

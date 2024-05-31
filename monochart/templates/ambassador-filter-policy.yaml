@@ -1,5 +1,6 @@
 {{- $root := . -}}
 
+{{- if .Values.filterPolicy -}}
 {{- if .Values.filterPolicy.enabled -}}
 apiVersion: getambassador.io/v3alpha1
 kind: FilterPolicy
@@ -33,4 +34,5 @@ spec:
       filters:
         - name: ambassador-apigateway-okta-{{ .Values.filterPolicy.type }}-filter
           namespace: ambassador-apigateway
+{{- end -}}
 {{- end -}}
