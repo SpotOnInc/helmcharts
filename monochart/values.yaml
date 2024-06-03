@@ -325,7 +325,7 @@ service:
   #   name: value
 
 mapping:
-  normal:
+  api:
     enabled: false
     # host: normal.{{ $AppName }}.{{ .Environment.Name }}.spoton.sh
     # prefix: /my-prefix
@@ -334,7 +334,7 @@ mapping:
     #   name: value
     # annotations:
     #   name: value
-  mygrpc:
+  grpc:
     enabled: false
     # host: mygrpc.{{ $AppName }}.{{ .Environment.Name }}.spoton.sh
     # prefix: /my-grpc
