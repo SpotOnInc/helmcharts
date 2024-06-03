@@ -324,6 +324,26 @@ service:
   # annotations:
   #   name: value
 
+mapping:
+  api:
+    enabled: false
+    # host: normal.{{ $AppName }}.{{ .Environment.Name }}.spoton.sh
+    # prefix: /my-prefix
+    # rewrite: /my-rewrite
+    # labels:
+    #   name: value
+    # annotations:
+    #   name: value
+  grpc:
+    enabled: false
+    # host: mygrpc.{{ $AppName }}.{{ .Environment.Name }}.spoton.sh
+    # prefix: /my-grpc
+    # grpc: true
+    # labels:
+    #   name: value
+    # annotations:
+    #   name: value
+
 ## ServiceMonitor CRDs to create & be scraped by the Prometheus instance.
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitorspec
