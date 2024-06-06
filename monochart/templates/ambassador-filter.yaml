@@ -1,0 +1,34 @@
+{{- $root := . -}}
+{{- if .Values.filter -}}
+{{- $filter := .Values.filter }}
+{{- if $filter.enabled }}
+---
+apiVersion: getambassador.io/v3alpha1
+kind: Filter
+metadata:
+  name: ambassador-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
+  namespace: ambassador
+{{- with .Values.filterPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.filterPolicy.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  OAuth2:
+    accessTokenJWTFilter:
+      name: '""'
+      namespace: '""'
+    audience: api://default
+    authorizationURL: https://spoton.okta.com
+    clientID: {{ .Values.filter.clientID }}
+    clientSessionMaxIdle: 0s
+    grantType: '""'
+    protectedOrigins:
+    - origin: https://{{ include "common.fullname" $root }}.{{ $.Release.Namespace }}.{{ .Values.filter.tld }}
+    secret: {{ .Values.filter.secret }}
+{{- end }}
+{{- end -}}
