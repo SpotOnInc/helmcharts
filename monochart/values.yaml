@@ -355,6 +355,7 @@ filter:
 
 # Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters
 filterPolicy:
+  enabled: false
   excludePaths:
     - /docs*
     - /health*
