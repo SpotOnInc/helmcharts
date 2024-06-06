@@ -15,22 +15,16 @@ metadata:
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
-  ambassador_id: ambassador-apigateway
   rules:
     {{- range $path := $.Values.filterPolicy.excludePaths }}
-    - host: {{ $.Values.filterPolicy.host }}
+    - host: {{ include "common.fullname" $root }}.{{ $.Release.Namespace }}.{{ $.Values.filterPolicy.tld }}
       path: {{ quote $path }}
       filters:
-        - name: ambassador-apigateway-okta-central-filter
-          namespace: ambassador-apigateway
+        - name: ambassador-okta-central-filter
+          namespace: ambassador
           onDeny: continue
           onAllow: break
-        - name: ambassador-apigateway-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
-          namespace: ambassador-apigateway
+        - name: ambassador-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
+          namespace: ambassador
     {{- end }}
-    - host: "{{ .Values.filterPolicy.host }}"
-      path: "*"
-      filters:
-        - name: ambassador-apigateway-okta-{{ .Values.filterPolicy.type }}-filter
-          namespace: ambassador-apigateway
 {{- end -}}
