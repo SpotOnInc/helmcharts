@@ -29,6 +29,7 @@ spec:
     grantType: '""'
     protectedOrigins:
     - origin: https://{{ include "common.fullname" $root }}.{{ $.Release.Namespace }}.{{ .Values.filter.tld }}
-    secret: {{ .Values.filter.secret }}
+    secretName: ambassador-oauth2-client-secret
+    secretNamespace: ambassador
 {{- end }}
 {{- end -}}
