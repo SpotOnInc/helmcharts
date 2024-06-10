@@ -345,12 +345,11 @@ mapping:
     # annotations:
     #   name: value
 
-# Ref: https://www.getambassador.io/docs/edge-stack/latest/custom-resources/getambassador/v3alpha1/filter-oauth2
+# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters/oauth2
 # Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters/jwt
 filter:
   enabled: false
   clientID: 0oa9jntm09fFIJlPJ697
-  secret: TODO
   tld: spoton.sh
 
 # Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters
