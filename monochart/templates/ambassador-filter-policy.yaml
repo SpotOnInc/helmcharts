@@ -1,5 +1,5 @@
 {{- $root := . -}}
-{{- if .Values.filter -}}
+{{- if .Values.filterPolicy -}}
 {{- if .Values.filterPolicy.enabled -}}
 apiVersion: getambassador.io/v3alpha1
 kind: FilterPolicy
