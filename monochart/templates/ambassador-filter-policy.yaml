@@ -1,5 +1,5 @@
 {{- $root := . -}}
-
+{{- if .Values.filter -}}
 {{- if .Values.filterPolicy.enabled -}}
 apiVersion: getambassador.io/v3alpha1
 kind: FilterPolicy
@@ -27,4 +27,5 @@ spec:
         - name: ambassador-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
           namespace: ambassador
     {{- end }}
+{{- end -}}
 {{- end -}}
