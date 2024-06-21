@@ -1,0 +1,31 @@
+{{- $root := . -}}
+{{- if .Values.filterPolicy -}}
+{{- if .Values.filterPolicy.enabled -}}
+apiVersion: getambassador.io/v3alpha1
+kind: FilterPolicy
+metadata:
+  name: {{ include "common.fullname" . }}
+{{- with .Values.filterPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.filterPolicy.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  rules:
+    {{- range $path := $.Values.filterPolicy.excludePaths }}
+    - host: {{ include "common.fullname" $root }}.{{ $.Release.Namespace }}.{{ $.Values.filterPolicy.tld }}
+      path: {{ quote $path }}
+      filters:
+        - name: ambassador-okta-central-filter
+          namespace: ambassador
+          onDeny: continue
+          onAllow: break
+        - name: ambassador-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
+          namespace: ambassador
+    {{- end }}
+{{- end -}}
+{{- end -}}

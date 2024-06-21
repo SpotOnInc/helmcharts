@@ -324,6 +324,7 @@ service:
   # annotations:
   #   name: value
 
+# Ref: https://archive.getambassador.io/docs/emissary/3.6/topics/using/intro-mappings
 mapping:
   api:
     enabled: false
@@ -343,6 +344,26 @@ mapping:
     #   name: value
     # annotations:
     #   name: value
+
+# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters/oauth2
+# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters/jwt
+filter:
+  enabled: false
+  clientID: 0oa9jntm09fFIJlPJ697
+  tld: spoton.sh
+
+# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters
+filterPolicy:
+  enabled: false
+  excludePaths:
+    - /docs*
+    - /health*
+    - /heartbeat*
+    - /metrics*
+    - /version*
+    - /openapi.json*
+    - '*'
+  tld: spoton.sh
 
 ## ServiceMonitor CRDs to create & be scraped by the Prometheus instance.
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
