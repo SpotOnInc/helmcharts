@@ -715,9 +715,9 @@ networkPolicy:
 
 # https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 hpa:
-  enabled: true
-  autoscaling:
-    minReplicas: 1
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 90
-    targetMemoryUtilizationPercentage: 90
+  enabled: false
+#   autoscaling:
+#     minReplicas: 1
+#     maxReplicas: 10
+#     targetCPUUtilizationPercentage: 90
+#     targetMemoryUtilizationPercentage: 90
