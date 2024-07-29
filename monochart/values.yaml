@@ -712,3 +712,11 @@ networkPolicy:
   #         protocol: TCP
 
 
+hpa:
+  enabled: true
+
+autoscaling:
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 90
+  targetMemoryUtilizationPercentage: 90
