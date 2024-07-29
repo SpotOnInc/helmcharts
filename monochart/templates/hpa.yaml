@@ -24,7 +24,7 @@ spec:
   metrics:
   {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
   - type: Resource
-   resource:
+    resource:
       name: cpu
       target:
         type: Utilization
