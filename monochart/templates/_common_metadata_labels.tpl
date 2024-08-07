@@ -51,6 +51,6 @@ Labels to use in:
   statefulset.spec.volumeClaimTemplates.labels
 */}}
 {{- define "common.labels.short" -}}
-app.kubernetes.io/name: {{ include "common.name" . }}
+app.kubernetes.io/name: {{ .Release.Name }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
