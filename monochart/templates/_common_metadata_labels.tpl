@@ -38,7 +38,7 @@ Example output:
 Kubernetes standard labels
 */}}
 {{- define "common.labels.standard" -}}
-app.kubernetes.io/name: {{ include "common.name" . }}
+app.kubernetes.io/name: {{ .Release.Name }}
 helm.sh/chart: {{ include "common.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
