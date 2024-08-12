@@ -80,7 +80,7 @@ kubectl get deployment -n "$RELEASE_NAMESPACE" "${TEMP_DEPLOYMENT}" -o yaml |
   yq eval "
     (.metadata.name = \"${DEPLOYMENT}\") |
     (.spec.selector.matchLabels.\"app.kubernetes.io/name\"=\"${DEPLOYMENT}\") |
-    (.spec.template.metadata.labels.\"app.kubernetes.io/name\"=\"${DEPLOYMENT}\") |
+    (.spec.template.metadata.labels.\"app.kubernetes.io/name\"=\"${DEPLOYMENT}\")
   " - > "${DEPLOYMENT}".deployment.yaml
 kubectl apply -f "${DEPLOYMENT}".deployment.yaml
 
