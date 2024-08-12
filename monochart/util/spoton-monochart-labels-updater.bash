@@ -54,7 +54,6 @@ TEMP_DEPLOYMENT="${DEPLOYMENT}-temp"
 echo "***********************************"
 echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
 echo "RELEASE_NAME: ${RELEASE_NAME}"
-echo "SPOTON_CHART_VERSION: ${SPOTON_CHART_VERSION}"
 echo "DEPLOYMENT: ${DEPLOYMENT}"
 echo "TEMP_DEPLOYMENT: ${TEMP_DEPLOYMENT}"
 echo "***********************************"
@@ -67,7 +66,7 @@ kubectl get deployment -n "${RELEASE_NAMESPACE}" "${DEPLOYMENT}" -o yaml |
 
 kubectl apply -f "${TEMP_DEPLOYMENT}".deployment.yaml
 
-# Wait for deployment to finish
+# Wait for temp deployment to finish
 kubectl rollout status deployment -n "${RELEASE_NAMESPACE}" "${TEMP_DEPLOYMENT}" -w --timeout=0s
 
 message '👷 Deleting old deployment...'
