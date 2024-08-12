@@ -32,7 +32,7 @@ fi
 
 helm_values=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
 DEPLOYMENT=$(yq eval .fullnameOverride <<< "$helm_values")
-SERVICE="$DEPLOYMENT" # TODO - check this
+SERVICE="$DEPLOYMENT"
 if [[ "$DEPLOYMENT" == "null" ]]; then
   message "⚠️  Could not determine deployment name. Exiting."
   exit 1
