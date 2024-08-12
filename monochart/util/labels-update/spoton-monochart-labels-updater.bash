@@ -32,6 +32,7 @@ fi
 
 helm_values=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
 DEPLOYMENT=$(yq eval .fullnameOverride <<< "$helm_values")
+SERVICE="$DEPLOYMENT" # TODO - check this
 if [[ "$DEPLOYMENT" == "null" ]]; then
   message "⚠️  Could not determine deployment name. Exiting."
   exit 1
@@ -55,6 +56,7 @@ echo "***********************************"
 echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
 echo "RELEASE_NAME: ${RELEASE_NAME}"
 echo "DEPLOYMENT: ${DEPLOYMENT}"
+echo "SERVICE: ${SERVICE}"
 echo "TEMP_DEPLOYMENT: ${TEMP_DEPLOYMENT}"
 echo "***********************************"
 
@@ -84,6 +86,9 @@ kubectl apply -f "${DEPLOYMENT}".deployment.yaml
 
 # Wait for deployment to finish
 kubectl rollout status deployment -n "${RELEASE_NAMESPACE}" "${DEPLOYMENT}" -w --timeout=0s
+
+# Patch the service so that its matchLabels point to the new pods
+kubectl patch service -n "$RELEASE_NAMESPACE" "$SERVICE" -p "{\"spec\": {\"selector\": {\"matchLabels\": {\"app.kubernetes.io/name\": \"${DEPLOYMENT}\"}}}}"
 
 message '👷 Deleting temp deployment...'
 kubectl delete deployment -n "${RELEASE_NAMESPACE}" "${TEMP_DEPLOYMENT}"
