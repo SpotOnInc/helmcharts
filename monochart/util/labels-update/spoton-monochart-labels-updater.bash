@@ -30,8 +30,8 @@ if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
   exit 1
 fi
 
-HELM_VALUES=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
-DEPLOYMENT=$(yq eval .fullnameOverride <<< "$HELM_VALUES")
+helm_values=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
+DEPLOYMENT=$(yq eval .fullnameOverride <<< "$helm_values")
 if [[ "$DEPLOYMENT" == "null" ]]; then
   message "⚠️  Could not determine deployment name. Exiting."
   exit 1
