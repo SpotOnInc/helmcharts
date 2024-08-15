@@ -174,7 +174,10 @@ deployment:
     lifecycle: {}
     hostPID: false
     terminationGracePeriodSeconds: 30
-    # topologySpreadConstraints: {}
+    # topologySpreadConstraints:
+    #   - maxSkew: 1
+    #     topologyKey: topology.kubernetes.io/zone
+    #     whenUnsatisfiable: ScheduleAnyway
 
 
 FirstVolumeMounts: {}
