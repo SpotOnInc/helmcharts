@@ -78,6 +78,10 @@ spec:
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
       {{- end }}
+      {{- if .Values.deployment.pod.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.pod.topologySpreadConstraints | indent 8 }}
+      {{- end }}
 
 
       {{- if .Values.initcontainers.enabled }}
