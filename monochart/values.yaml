@@ -717,7 +717,7 @@ networkPolicy:
 hpa:
   enabled: false
 #   autoscaling:
-#     minReplicas: 1
+#     minReplicas: 3
 #     maxReplicas: 10
 #     targetCPUUtilizationPercentage: 90
 #     targetMemoryUtilizationPercentage: 90

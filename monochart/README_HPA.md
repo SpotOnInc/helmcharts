@@ -14,7 +14,7 @@ This document walks you through an example of enabling HorizontalPodAutoscaler t
 |Key|Value|
 |-|-|
 |hpa.enabled|false|
-|hpa.autoscaling.minReplicas|1|
+|hpa.autoscaling.minReplicas|3|
 |hpa.autoscaling.maxReplicas|10|
 |hpa.autoscaling.targetCPUUtilizationPercentage|90|
 |hpa.autoscaling.targetMemoryUtilizationPercentage|90|
