@@ -38,7 +38,7 @@ Example output:
 Kubernetes standard labels
 */}}
 {{- define "common.labels.standard" -}}
-app.kubernetes.io/name: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "common.fullname" . }}
 helm.sh/chart: {{ include "common.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -51,6 +51,6 @@ Labels to use in:
   statefulset.spec.volumeClaimTemplates.labels
 */}}
 {{- define "common.labels.short" -}}
-app.kubernetes.io/name: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "common.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
