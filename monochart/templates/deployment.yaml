@@ -26,7 +26,11 @@ metadata:
     spoton.NetPolicy: disabled
     {{- end }}
 spec:
+{{- if .Values.hpa.enabled }}
+  {{- /*replicas: 0*/ -}}
+  {{- else }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "common.name" . }}
