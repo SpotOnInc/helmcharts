@@ -163,14 +163,14 @@ spec:
       hostAliases:
 {{ toYaml . | indent 8 }}
 {{- end }}
-      imagePullSecrets:
 {{- if .Values.dockercfg.enabled }}
+      imagePullSecrets:
         - name: {{ include "common.fullname" . }}
-{{- end }}
 {{- with .Values.image.pullSecrets }}
       {{- range . }}
         - name: {{ . }}
       {{- end }}
+{{- end }}
 {{- end }}
       volumes:
         {{- if .Values.VolumeMountsConfig }}
