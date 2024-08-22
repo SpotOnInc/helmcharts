@@ -163,27 +163,27 @@ spec:
       hostAliases:
 {{ toYaml . | indent 8 }}
 {{- end }}
-{{- if .Values.dockercfg.enabled }}
       imagePullSecrets:
+{{- if .Values.dockercfg.enabled }}
         - name: {{ include "common.fullname" . }}
+{{- end }}
 {{- with .Values.image.pullSecrets }}
       {{- range . }}
         - name: {{ . }}
       {{- end }}
 {{- end }}
-{{- end }}
       volumes:
-      {{- if .Values.VolumeMountsConfig }}
-{{ tpl .Values.VolumeMountsConfig . | indent 6 }}
+        {{- if .Values.VolumeMountsConfig }}
+{{ tpl .Values.VolumeMountsConfig . | indent 8 }}
+        {{- end }}
+      {{- if .Values.persistence.enabled }}
+        - name: storage
+      {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+      {{- else }}
+          emptyDir: {}
       {{- end }}
-    {{- if .Values.persistence.enabled }}
-      - name: storage
-    {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
-    {{- else }}
-        emptyDir: {}
-    {{- end }}
-    {{- end }}
-    {{- include "monochart.files.volumes" . | nindent 8 }}
+      {{- end }}
+      {{- include "monochart.files.volumes" . | nindent 8 }}
 {{- end -}}
