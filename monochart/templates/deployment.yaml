@@ -172,18 +172,18 @@ spec:
       {{- end }}
 {{- end }}
 {{- end }}
-      volumes:
-        {{- if .Values.VolumeMountsConfig }}
-{{ tpl .Values.VolumeMountsConfig . | indent 8 }}
-        {{- end }}
-      {{- if .Values.persistence.enabled }}
-        - name: storage
-      {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
-      {{- else }}
-          emptyDir: {}
+    volumes:
+      {{- if .Values.VolumeMountsConfig }}
+{{ tpl .Values.VolumeMountsConfig . | indent 6 }}
       {{- end }}
-      {{- end }}
-      {{- include "monochart.files.volumes" . | nindent 8 }}
+    {{- if .Values.persistence.enabled }}
+      - name: storage
+    {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+    {{- else }}
+        emptyDir: {}
+    {{- end }}
+    {{- end }}
+    {{- include "monochart.files.volumes" . | nindent 6 }}
 {{- end -}}
