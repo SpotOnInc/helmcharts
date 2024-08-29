@@ -35,12 +35,6 @@ if [[ "$DEPLOYMENT" == "null" ]]; then
   exit 1
 fi
 
-echo "***********************************"
-echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
-echo "RELEASE_NAME: ${RELEASE_NAME}"
-echo "DEPLOYMENT: ${DEPLOYMENT}"
-echo "***********************************"
-
 deployment_yaml=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml 2>&1)
 if [[ "$?" == 1 ]]; then
   if [[ "$deployment_yaml" =~ "not found" ]]; then
