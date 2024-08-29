@@ -55,6 +55,8 @@ fi
 label_app_name=$(yq eval .spec.template.metadata.labels.\"app.kubernetes.io/name\" <<< "$deployment_yaml")
 if [[ "$label_app_name" == "$DEPLOYMENT" ]]; then
   echo "Already updated."
+  exit 0
 else
   echo "Needs updating."
+  exit 1
 fi
