@@ -94,4 +94,3 @@ message '👷 Deleting temp deployment...'
 kubectl delete deployment -n "${RELEASE_NAMESPACE}" "${TEMP_DEPLOYMENT}"
 
 message '🏁 All done!'
-exit 0
