@@ -9,7 +9,7 @@
 #   - RELEASE_NAMESPACE - e.g. staging
 ##############################################################
 
-set -e
+set -eo pipefail
 
 message() {
   echo
