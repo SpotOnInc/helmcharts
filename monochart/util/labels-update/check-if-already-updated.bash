@@ -35,6 +35,12 @@ if [[ "$DEPLOYMENT" == "null" ]]; then
   exit 1
 fi
 
+echo "***********************************"
+echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
+echo "RELEASE_NAME: ${RELEASE_NAME}"
+echo "DEPLOYMENT: ${DEPLOYMENT}"
+echo "***********************************"
+
 deployment_yaml=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml 2>&1)
 if [[ "$?" == 1 ]]; then
   if [[ "$deployment_yaml" =~ "not found" ]]; then
@@ -49,6 +55,8 @@ fi
 label_app_name=$(yq eval .spec.template.metadata.labels.\"app.kubernetes.io/name\" <<< "$deployment_yaml")
 if [[ "$label_app_name" == "$DEPLOYMENT" ]]; then
   echo "Already updated."
+  export NEEDS_UPDATING=false
 else
   echo "Needs updating."
+  export NEEDS_UPDATING=true
 fi
