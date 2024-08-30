@@ -42,11 +42,7 @@ app.kubernetes.io/name: {{ include "common.fullname" . }}
 helm.sh/chart: {{ include "common.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-domain: env.domain
-subdomain: env.subdomain
-{{- end -}}
 
-{{/*
 {{- end -}}
 
 {{/*
