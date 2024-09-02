@@ -1,7 +1,9 @@
 # Monochart
 
 ## Introduction
-Forked from https://github.com/cloudposse/charts/tree/master/incubator/monochart 
+
+Forked from [github.com/cloudposse/charts](https://github.com/cloudposse/charts/tree/master/incubator/monochart)
+
 ## Changes
 
 ### common.labels
@@ -29,7 +31,7 @@ https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
 
 
 ### Initcontainers
-We have add [InitContainers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) template to this chart. It is disable by default, but when enable, the template will put everything inside of the **FirstInitContainer** parameter inside of the configuration. 
+We have add [InitContainers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) template to this chart. It is disable by default, but when enable, the template will put everything inside of the **FirstInitContainer** parameter inside of the configuration.
 
 If you need more than one InitContainer, you can use **extraInitContainer** parameter multiples times.
 
@@ -39,7 +41,7 @@ If you need more than one InitContainer, you can use **extraInitContainer** para
 To enable it on this chart you need to add this values to the helmfile.
 
 ```yaml
-sealedsecrets: 
+sealedsecrets:
   enabled: false
     keys:
     - name: google-secrets
@@ -101,16 +103,16 @@ Helm Charts don't allow the inclusion of files outside of the chart directory, f
 │   ├── config.xml
 ```
 
-We can include/read the file **chart-config.json**, but not the file **config.xml** on app directory, because it is outside from the chart directory. To workaroung this, we have add a template in the monochart that will read the values from **"--set-file"** parameter from helm or the parameters **set:** from helmfile. 
+We can include/read the file **chart-config.json**, but not the file **config.xml** on app directory, because it is outside from the chart directory. To workaroung this, we have add a template in the monochart that will read the values from **"--set-file"** parameter from helm or the parameters **set:** from helmfile.
 
 But, it need to have a specific format, like this:
 
 ```yaml
-# helmfile 
+# helmfile
 releases:
     - name: test
     [... cut ...]
-    
+
     set:
       # This will load a local file inside of a configmap resource (ConfigMapFiles).
       # You need to follow this exact syntax:
@@ -231,15 +233,15 @@ Ingress annotation indicating we want to use Application Load Balancer are neces
               alb.ingress.kubernetes.io/target-type: ip
               # Application Load Balancer has to be publicly available to endpoint be reachable externally.
               alb.ingress.kubernetes.io/scheme: internet-facing
-              # Health check path has to be adjusted according to your application so load balancer can check if it can 
+              # Health check path has to be adjusted according to your application so load balancer can check if it can
               # route traffic to your service.
               alb.ingress.kubernetes.io/healthcheck-path: /
 ```
 
 Then, we have to update `hosts` section. There are 2 notations supported.
 
-1. Legacy. Backward compatibility with Network Load Balancer. 
-   
+1. Legacy. Backward compatibility with Network Load Balancer.
+
    This mode helps to migrate from `nginx` ingress class to `alb`, however, it's not secure at all as the ZScaler
    configuration is skipped and entire endpoint is exposed to public internet. `hosts` ingress section doesn't require
    any modifications and can be left as it is. Just add annotations mentioned above and you're good to go.
@@ -257,7 +259,7 @@ Then, we have to update `hosts` section. There are 2 notations supported.
 
     Live apps examples:
 
-    - [olo-web-api](https://github.com/SpotOnInc/giftcard-service/blob/36addd4fa2d6ad6fa2105089433d7c8e2ec1da7c/deploy/releases/giftcard-api.yaml#L121-L128) 
+    - [olo-web-api](https://github.com/SpotOnInc/giftcard-service/blob/36addd4fa2d6ad6fa2105089433d7c8e2ec1da7c/deploy/releases/giftcard-api.yaml#L121-L128)
     - [dishout-service](https://github.com/SpotOnInc/dishout-service/blob/22547a1da6c1054ec282c192aff630bf84666385/deploy/releases/dishout-service.yaml#L291)
     - [giftcard service](https://github.com/SpotOnInc/giftcard-service/blob/36addd4fa2d6ad6fa2105089433d7c8e2ec1da7c/deploy/releases/giftcard-api.yaml#L121-L128)
 
@@ -268,7 +270,7 @@ Then, we have to update `hosts` section. There are 2 notations supported.
 
    ```yaml
             hosts:
-              '{{ env "APP_HOST" }}': 
+              '{{ env "APP_HOST" }}':
               {{- if index .Values "public_paths" }}
                 {{- range .Values.public_paths }}
                 - '{{ . }}'
@@ -276,7 +278,7 @@ Then, we have to update `hosts` section. There are 2 notations supported.
               {{- end }}
 
               # Allows us to optionally define extra DNS names to send to this ingress.
-              # The $root variable is important because the nested range loop has to refer to top-level .Values 
+              # The $root variable is important because the nested range loop has to refer to top-level .Values
               {{- $root := . -}}
             {{- if index .Values "vanityDomains" }}
               {{ range $domain := .Values.vanityDomains }}
@@ -290,21 +292,21 @@ Then, we have to update `hosts` section. There are 2 notations supported.
             {{- end }}
     ```
 
-    By default the app URL will be accessible via ZScaler only. Note the vanity domains will also be affected. If you'd 
-    like to expose some URL paths add `public_paths` list to the top of helmfile. Example below shows the `/status` exact 
+    By default the app URL will be accessible via ZScaler only. Note the vanity domains will also be affected. If you'd
+    like to expose some URL paths add `public_paths` list to the top of helmfile. Example below shows the `/status` exact
     path and `/api/` prefix path on staging will be accessible to anyone on public internet:
 
     ```yaml
     environments:
       staging:
-        values: 
+        values:
           - public_paths:
             - /status
             - /api/*
     ```
 
     Live apps examples:
-    
+
     - [payments-pci-data-collection-service](https://github.com/SpotOnInc/payments-pci-data-collection-service/blob/master/deploy/releases/payments-pci-data-collection-service.yaml#L38-L39)
       uses list of `public_paths` to expose a production endpoint to public Internet. It's necessary for customer's
       browser to reach to this endpoint.
@@ -314,13 +316,13 @@ Then, we have to update `hosts` section. There are 2 notations supported.
 By default ZScaler Proxy IP addresses work for most environments. However, if that require customization an example
 below explains how it can be achieved in helmfile.
 
-1. Create `zscalerProxyIPs` variable in your helmfile. 
+1. Create `zscalerProxyIPs` variable in your helmfile.
 
   ```yaml
   environments:
     pci-unlimited:
       values:
-        - zscalerProxyIPs: 
+        - zscalerProxyIPs:
           - 54.82.104.143/32
           - 54.86.79.65/32
   ```
@@ -331,7 +333,7 @@ below explains how it can be achieved in helmfile.
     ingress:
       default:
         enabled: true
-        zscalerProxyIPs: 
+        zscalerProxyIPs:
         {{ range .Values.zscalerProxyIPs }}
           - {{ . }}
         {{ end }}
