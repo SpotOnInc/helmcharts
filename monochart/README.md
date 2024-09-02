@@ -307,7 +307,7 @@ Then, we have to update `hosts` section. There are 2 notations supported.
 
     Live apps examples:
 
-    - [payments-pci-data-collection-service](https://github.com/SpotOnInc/payments-pci-data-collection-service/blob/master/deploy/releases/payments-pci-data-collection-service.yaml#L38-L39)
+    - [payments-pci-data-collection-service](https://github.com/SpotOnInc/payments-pci-data-collection-service/blob/9f8880f275bdc053f18b629357e9d61dcc86f557/deploy/releases/payments-pci-data-collection-service.yaml#L38-L39)
       uses list of `public_paths` to expose a production endpoint to public Internet. It's necessary for customer's
       browser to reach to this endpoint.
 
