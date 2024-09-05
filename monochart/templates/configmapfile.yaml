@@ -10,7 +10,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $configMapName }}
-  labels: 
+  labels:
     {{- include "common.labels.standard" $root | nindent 4 }}
 data:
 {{ $configMapName | indent 2}}: |-

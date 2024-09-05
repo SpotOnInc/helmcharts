@@ -4,7 +4,7 @@ serviceAccount:
   create: false
   annotations:
   labels:
-  name:     
+  name:
 
 # If you want to deploy the rbac to service account with specific name but you don't want to create service account just
 # keep the above serviceAccount `create: false` but provide `name:` parameter.
@@ -28,11 +28,11 @@ rbacRole:
   #     verbs:
   #     - get
   #     - list
-  #     - create	
-  #     - delete	
-  #     - deletecollection	
-  #     - patch	
-  #     - update	
+  #     - create
+  #     - delete
+  #     - deletecollection
+  #     - patch
+  #     - update
   #     - watch
 
 dockercfg:
@@ -93,7 +93,7 @@ secrets: {}
 # the secret name can be changed without problem, but the resource name or the value *NO*
 # to create a sealedsecrets you can use the webseal or https://webseal.qa.spoton.sh/
 # NOTE: remember to add the sealedsecret name to the "envFrom.secrets" above.
-sealedsecrets: 
+sealedsecrets:
   enabled: false
   # keys:
   #   - name: google-secrets
@@ -530,9 +530,9 @@ persistence:
 ingress:
   default:
     enabled: false
-    zscalerProxyIPs: 
-      - "34.238.231.165/32" 
-      - "34.202.59.188/32" 
+    zscalerProxyIPs:
+      - "34.238.231.165/32"
+      - "34.202.59.188/32"
       - "34.197.162.237/32"
 #    className: nginx # <-- set ingressClass for this ingress resource
 #    port: port-name
@@ -654,7 +654,7 @@ networkPolicy:
   # We can use 3 types of Selector ipBlock, namespaceSelector and podSelector, plus the ports (port and protocol)
   # VERY IMPORTANT... using more than one selector will work as "OR" not like as "AND" in this template.
 
-  # In the example above, we are allowing the input traffic from the IPs 8.8.8.8 OR 1.1.1.1 OR from namespace: staging 
+  # In the example above, we are allowing the input traffic from the IPs 8.8.8.8 OR 1.1.1.1 OR from namespace: staging
   # OR namespace: prod OR pods with the role "frontend" on the ports 5432/TCP and 123/UDP
   Ingress: {}
   #   - name: test-ingress
@@ -716,3 +716,12 @@ networkPolicy:
   #         protocol: TCP
 
 
+
+# https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+hpa:
+  enabled: false
+  autoscaling:
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 70

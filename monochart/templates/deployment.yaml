@@ -26,7 +26,11 @@ metadata:
     spoton.NetPolicy: disabled
     {{- end }}
 spec:
+{{- if .Values.hpa.enabled }}
+  {{- /*replicas: 0*/ -}}
+  {{- else }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
 {{- include "common.labels.short" . | nindent 6 }}
