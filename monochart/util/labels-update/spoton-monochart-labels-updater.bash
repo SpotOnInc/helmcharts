@@ -60,7 +60,6 @@ echo "SERVICE: ${SERVICE}"
 echo "TEMP_DEPLOYMENT: ${TEMP_DEPLOYMENT}"
 echo "***********************************"
 
-
 ##################################################
 # DRY RUN START
 # Remove this block to make the script active.
@@ -70,7 +69,6 @@ echo
 exit 0
 # DRY RUN END
 ##################################################
-
 
 # Create a temp deployment (same except for the name)
 message '👷 Creating temp deployment...'
