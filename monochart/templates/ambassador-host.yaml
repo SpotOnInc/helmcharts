@@ -1,0 +1,33 @@
+{{- $root := . -}}
+{{- if .Values.host -}}
+{{- range $name, $host := .Values.host -}}
+{{- if $host.enabled }}
+---
+apiVersion: getambassador.io/v2
+kind: Host
+metadata:
+  name: {{ $name }}
+  namespace: {{ $root.Release.Namespace }}
+{{- with $host.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $host.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  hostname: {{ $host.hostname }}
+  selector: 
+    matchLabels: 
+      app: {{ $name }}
+  tlsContext:
+    name: {{ $host.tlsContext.name }}
+    namespace: {{ $host.tlsContext.namespace }}
+  tlsSecret:
+    name: {{ $host.tlsSecret.name }}
+    namespace: {{ $host.tlsSecret.namespace }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

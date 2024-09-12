@@ -18,7 +18,7 @@ metadata:
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
-  host: {{ $mapping.host }}
+  host: "*"
   prefix: {{ $mapping.prefix | default "/" }}
   grpc: {{ $mapping.grpc | default false }}
   {{- if $mapping.rewrite }}
