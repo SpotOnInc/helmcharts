@@ -21,7 +21,7 @@ spec:
   hostname: {{ $host.hostname }}
   selector: 
     matchLabels: 
-      app: {{ $name }}
+      app: {{ include "common.fullname" $root }}
   tlsContext:
     name: {{ $host.tlsContext.name }}
     namespace: {{ $host.tlsContext.namespace }}
