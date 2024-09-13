@@ -328,6 +328,16 @@ service:
   # annotations:
   #   name: value
 
+services:
+  default:
+    enabled: false
+    # internal: 80
+    # external: 80
+    # labels:
+    #   name: value
+    # annotations:
+    #   name: value
+
 # Ref: https://archive.getambassador.io/docs/emissary/3.6/topics/using/intro-mappings
 mapping:
   api:

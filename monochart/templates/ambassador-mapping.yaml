@@ -18,13 +18,13 @@ metadata:
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
-  host: {{ $mapping.host }}
+  host: {{ $mapping.host }}{{ .Values.mapping.tld }}
   prefix: {{ $mapping.prefix | default "/" }}
   grpc: {{ $mapping.grpc | default false }}
   {{- if $mapping.rewrite }}
   rewrite: {{ $mapping.rewrite }}
   {{- end }}
-  service: {{ include "common.fullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local
+  service: {{ $mapping.service }}.{{ $root.Release.Namespace }}.svc.cluster.local
   timeout_ms: 60000
 {{- end -}}
 {{- end -}}
