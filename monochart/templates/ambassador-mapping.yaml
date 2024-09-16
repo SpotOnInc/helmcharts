@@ -1,6 +1,5 @@
 {{- $root := . -}}
 {{- if .Values.mapping -}}
-{{- $tld := .Values.mapping.tld -}}
 {{- range $name, $mapping := .Values.mapping -}}
 {{- if $mapping.enabled }}
 ---
@@ -19,7 +18,7 @@ metadata:
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
-  host: {{ $mapping.host }}{{ $tld }}
+  host: {{ $mapping.host }}{{ .Values.tld }}
   prefix: {{ $mapping.prefix | default "/" }}
   grpc: {{ $mapping.grpc | default false }}
   {{- if $mapping.rewrite }}
