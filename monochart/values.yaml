@@ -328,22 +328,22 @@ service:
   # annotations:
   #   name: value
 
-services:
-  default:
+services: 
+  http:
     enabled: false
-    # internal: 80
-    # external: 80
-    # labels:
-    #   name: value
-    # annotations:
-    #   name: value
+    # ports:
+    #   http:
+    #     internal: 80
+    #     external: 80
+    #     protocol: TCP
+    # type: ClusterIP
 
 # Ref: https://archive.getambassador.io/docs/emissary/3.6/topics/using/intro-mappings
 mapping:
   api:
     enabled: false
-    # host: normal.{{ $AppName }}.{{ .Environment.Name }}.spoton.sh
-    # prefix: /my-prefix
+    # host: my-appname
+    # prefix: /my-prefix/
     # rewrite: /my-rewrite
     # labels:
     #   name: value
@@ -351,9 +351,10 @@ mapping:
     #   name: value
   grpc:
     enabled: false
-    # host: mygrpc.{{ $AppName }}.{{ .Environment.Name }}.spoton.sh
-    # prefix: /my-grpc
+    # host: my-appname-grpc
+    # prefix: /my-prefix/
     # grpc: true
+    # rewrite: /my-rewrite
     # labels:
     #   name: value
     # annotations:
