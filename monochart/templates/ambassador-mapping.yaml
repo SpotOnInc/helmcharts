@@ -1,4 +1,6 @@
 {{- $root := . -}}
+{{- if .Values.tld }}
+{{- $tld := .Values.tld -}}
 {{- if .Values.mapping -}}
 {{- range $name, $mapping := .Values.mapping -}}
 {{- if $mapping.enabled }}
@@ -18,7 +20,7 @@ metadata:
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
-  host: {{ $mapping.host }}{{ .Values.tld }}
+  host: {{ $mapping.host }}{{ $tld }}
   prefix: {{ $mapping.prefix | default "/" }}
   grpc: {{ $mapping.grpc | default false }}
   {{- if $mapping.rewrite }}
@@ -26,6 +28,7 @@ spec:
   {{- end }}
   service: {{ $mapping.service }}.{{ $root.Release.Namespace }}.svc.cluster.local
   timeout_ms: 60000
+{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
