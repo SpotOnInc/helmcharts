@@ -27,7 +27,7 @@ spec:
   rewrite: {{ $mapping.rewrite }}
   {{- end }}
   service: {{ $mapping.service }}.{{ $root.Release.Namespace }}.svc.cluster.local
-  timeout_ms: 60000
+  timeout_ms: {{ $mapping.timeout_ms || default 60000 }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
