@@ -1,0 +1,41 @@
+{{- if .Values.services.enabled -}}
+{{- range $serviceName, $service := .Values.services.list }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $serviceName | include "common.fullname" . }}
+  {{- with $service.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  labels:
+{{ include "common.labels.standard" $service | indent 4 }}
+  {{- with $service.labels }}
+{{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  type: {{ $service.type }}
+  {{- if eq $service.type "ExternalName" }}
+  externalName: {{ $service.externalName }}
+  {{- else }}
+  ports:
+  {{- range $name, $port := $service.ports }}
+    {{- if $port }}
+    - targetPort: {{ $name }}
+      port: {{ $port.external }}
+      protocol: {{ default "TCP" $port.protocol }}
+      name: {{ $name }}
+    {{- end }}
+  {{- end }}
+  {{- if $service.selector }}
+  selector:
+{{ toYaml $service.selector | indent 4 }}
+  {{- else }}
+  selector:
+{{ include "common.labels.standard" $service | nindent 4 }}
+    serve: "true"
+  {{- end }}
+  {{- end }}
+---
+{{- end }}
+{{- end -}}
