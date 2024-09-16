@@ -1,15 +1,17 @@
-{{- if .Values.services.enabled -}}
-{{- range $serviceName, $service := .Values.services.list }}
+{{- $root := . -}}
+{{- if .Values.services -}}
+{{- range $serviceName, $service := .Values.services -}}
+{{- if $service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $serviceName | include "common.fullname" . }}
+  name: {{ include "common.fullname" $root }}-{{ $serviceName }}
   {{- with $service.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
   {{- end }}
   labels:
-{{ include "common.labels.standard" $service | indent 4 }}
+{{ include "common.labels.standard" $root | indent 4 }}
   {{- with $service.labels }}
 {{ toYaml . | indent 4 }}
   {{- end }}
@@ -32,10 +34,11 @@ spec:
 {{ toYaml $service.selector | indent 4 }}
   {{- else }}
   selector:
-{{ include "common.labels.standard" $service | nindent 4 }}
+{{ include "common.labels.standard" $root | nindent 4 }}
     serve: "true"
   {{- end }}
   {{- end }}
 ---
-{{- end }}
+{{- end -}}
+{{- end -}}
 {{- end -}}

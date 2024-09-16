@@ -131,12 +131,16 @@ spec:
 {{ toYaml . | indent 10 }}
 {{- end }}
         ports:
-{{- range $name, $port := .Values.service.ports }}
-{{- if $port }}
+{{- range $serviceName, $service := .Values.services }}
+  {{- if $service.enabled }}
+    {{- range $name, $port := $service.ports }}
+      {{- if $port }}
           - name: {{ $name }}
             containerPort: {{ $port.internal }}
-            protocol: {{ default "TCP" $port.protocol  }}
-{{- end }}
+            protocol: {{ default "TCP" $port.protocol }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
         volumeMounts:
