@@ -339,7 +339,7 @@ services:
     # type: ClusterIP
 
 # use this for defining the tld ambassador related objects will use in the cell this application gets deployed to.
-# ambassador-tld: express-nonprod-c1.spoton.sh
+# ambassador_tld: express-nonprod-c1.spoton.sh
 
 # Ref: https://archive.getambassador.io/docs/emissary/3.6/topics/using/intro-mappings
 mapping:

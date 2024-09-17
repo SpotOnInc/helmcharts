@@ -1,6 +1,6 @@
 {{- $root := . -}}
-{{- if .Values.ambassador-tld }}
-{{- $ambassador-tld := .Values.ambassador-tld -}}
+{{- if .Values.ambassador_tld }}
+{{- $ambassador_tld := .Values.ambassador_tld -}}
 {{- if .Values.mapping -}}
 {{- range $name, $mapping := .Values.mapping -}}
 {{- if $mapping.enabled }}
@@ -20,7 +20,7 @@ metadata:
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
-  host: {{ $mapping.host }}.{{ $ambassador-tld }}
+  host: {{ $mapping.host }}.{{ $ambassador_tld }}
   prefix: {{ $mapping.prefix | default "/" }}
   grpc: {{ $mapping.grpc | default false }}
   {{- if $mapping.rewrite }}
