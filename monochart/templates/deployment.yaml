@@ -139,6 +139,7 @@ spec:
 {{- end }}
 {{- end }}
 
+{{- if .Values.extraServices -}}
 {{- range $serviceName, $service := .Values.extraServices }}
   {{- if $service.enabled }}
     {{- range $name, $port := $service.ports }}
@@ -149,6 +150,7 @@ spec:
       {{- end }}
     {{- end }}
   {{- end }}
+{{- end }}
 {{- end }}
 
         volumeMounts:
