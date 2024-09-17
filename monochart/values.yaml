@@ -328,7 +328,7 @@ service:
   # annotations:
   #   name: value
 
-services: 
+services:
   http:
     enabled: false
     # ports:
