@@ -1,6 +1,6 @@
 {{- $root := . -}}
-{{- if .Values.services -}}
-{{- range $serviceName, $service := .Values.services -}}
+{{- if .Values.extraServices -}}
+{{- range $serviceName, $service := .Values.extraServices -}}
 {{- if $service.enabled }}
 apiVersion: v1
 kind: Service

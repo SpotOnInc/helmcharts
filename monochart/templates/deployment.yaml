@@ -139,7 +139,7 @@ spec:
 {{- end }}
 {{- end }}
 
-{{- range $serviceName, $service := .Values.services }}
+{{- range $serviceName, $service := .Values.extraServices }}
   {{- if $service.enabled }}
     {{- range $name, $port := $service.ports }}
       {{- if $port }}
