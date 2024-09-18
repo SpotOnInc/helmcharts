@@ -139,20 +139,6 @@ spec:
 {{- end }}
 {{- end }}
 
-{{- if .Values.extraServices -}}
-{{- range $serviceName, $service := .Values.extraServices }}
-  {{- if $service.enabled }}
-    {{- range $name, $port := $service.ports }}
-      {{- if $port }}
-          - name: {{ $name }}
-            containerPort: {{ $port.internal }}
-            protocol: {{ default "TCP" $port.protocol }}
-      {{- end }}
-    {{- end }}
-  {{- end }}
-{{- end }}
-{{- end }}
-
         volumeMounts:
         {{- if .Values.FirstVolumeMounts }}
 {{ tpl .Values.FirstVolumeMounts . | indent 8 }}
