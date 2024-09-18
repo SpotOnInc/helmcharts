@@ -328,16 +328,6 @@ service:
   # annotations:
   #   name: value
 
-services:
-  http:
-    enabled: false
-    # ports:
-    #   http:
-    #     internal: 80
-    #     external: 80
-    #     protocol: TCP
-    # type: ClusterIP
-
 # use this for defining the tld ambassador related objects will use in the cell this application gets deployed to.
 # ambassador_tld: express-nonprod-c1.spoton.sh
 
