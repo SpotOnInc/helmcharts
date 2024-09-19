@@ -328,50 +328,43 @@ service:
   # annotations:
   #   name: value
 
-# use this for defining the tld ambassador related objects will use in the cell this application gets deployed to.
-# ambassador_tld: express-nonprod-c1.spoton.sh
+ambassador:
+  tld: express-nonprod-c1.spoton.sh
+  mappings:
+    default:
+      enabled: false
+      host: myapp
+    grpc:
+      enabled: false
+      grpc: true
+      host: myapp-grpc
 
-# Ref: https://archive.getambassador.io/docs/emissary/3.6/topics/using/intro-mappings
-mapping:
-  api:
-    enabled: false
-    # host: my-appname
-    # prefix: /my-prefix/
-    # rewrite: /my-rewrite
-    # labels:
-    #   name: value
-    # annotations:
-    #   name: value
-  grpc:
-    enabled: false
-    # host: my-appname-grpc
-    # prefix: /my-prefix/
-    # grpc: true
-    # rewrite: /my-rewrite
-    # labels:
-    #   name: value
-    # annotations:
-    #   name: value
+  filters:
+    user-auth:
+      enabled: false
+      clientID: "0oa9jntm09fFIJlPJ697"
+      # annotations:
+      #   description: "OAuth2 filter for user authentication"
+      # labels:
+      #   environment: "nonprod"
+      #   team: "backend"
 
-# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters/oauth2
-# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters/jwt
-filter:
-  enabled: false
-  clientID: 0oa9jntm09fFIJlPJ697
-  tld: spoton.sh
-
-# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters
-filterPolicy:
-  enabled: false
-  excludePaths:
-    - /docs*
-    - /health*
-    - /heartbeat*
-    - /metrics*
-    - /version*
-    - /openapi.json*
-    - '*'
-  tld: spoton.sh
+  filterPolicies:
+    general-policy:
+      enabled: false
+      excludePaths:
+        - /docs*
+        - /health*
+        - /heartbeat*
+        - /metrics*
+        - /version*
+        - /openapi.json*
+        - '*'
+      # annotations:
+      #   description: "Paths to exclude from authentication"
+      # labels:
+      #   environment: "staging"
+      #   team: "myteam"
 
 ## ServiceMonitor CRDs to create & be scraped by the Prometheus instance.
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md

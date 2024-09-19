@@ -1,8 +1,6 @@
 {{- $root := . -}}
-{{- if .Values.ambassador_tld }}
-{{- $ambassador_tld := .Values.ambassador_tld -}}
-{{- if .Values.mapping -}}
-{{- range $name, $mapping := .Values.mapping -}}
+{{- if .Values.ambassador.mappings -}}
+{{- range $name, $mapping := .Values.ambassador.mappings -}}
 {{- if $mapping.enabled }}
 ---
 apiVersion: getambassador.io/v2
@@ -20,7 +18,7 @@ metadata:
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
-  host: {{ $mapping.host }}.{{ $ambassador_tld }}
+  host: {{ $mapping.host }}.{{ $.Values.ambassador.tld }}
   prefix: {{ $mapping.prefix | default "/" }}
   grpc: {{ $mapping.grpc | default false }}
   {{- if $mapping.rewrite }}
@@ -28,7 +26,6 @@ spec:
   {{- end }}
   service: {{ include "common.fullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local
   timeout_ms: {{ $mapping.timeout_ms | default 60000 }}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
