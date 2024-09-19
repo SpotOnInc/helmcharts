@@ -1,0 +1,20 @@
+spec:
+  template:
+    spec:
+      containers:
+        - name: monochart-testing # Replace with your container name
+          image: nginx:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              nginx -g 'daemon off;' -c /etc/nginx/nginx.conf
+          volumeMounts:
+            - name: "nginx-config"
+              mountPath: "/etc/nginx/nginx.conf"
+              subPath: "nginx.conf"
+      volumes:
+        - name: "nginx-config"
+          configMap:
+            name: "nginx-config"
+
