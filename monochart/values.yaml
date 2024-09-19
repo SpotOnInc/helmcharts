@@ -329,16 +329,17 @@ service:
   #   name: value
 
 ambassador:
-  tld: express-nonprod-c1.spoton.sh
+  tld: express-nonprod-c1.spoton.sh # determines tld after app-name, example: monochart-testing.express-nonprod-c1.spoton.sh
+# https://www.getambassador.io/docs/edge-stack/latest/topics/using/intro-mappings
   mappings:
     default:
       enabled: false
-      host: myapp
+      host: myapp # host this app can be reached at, example: myapp.{tld}
     grpc:
       enabled: false
       grpc: true
       host: myapp-grpc
-
+# https://www.getambassador.io/docs/edge-stack/latest/topics/using/filters
   filters:
     user-auth:
       enabled: false
@@ -348,11 +349,11 @@ ambassador:
       # labels:
       #   environment: "nonprod"
       #   team: "backend"
-
+# https://www.getambassador.io/docs/edge-stack/latest/topics/using/filters
   filterPolicies:
     general-policy:
       enabled: false
-      excludePaths:
+      excludePaths: # standard set of exclude paths most filterPolicies use
         - /docs*
         - /health*
         - /heartbeat*
