@@ -43,6 +43,8 @@ helm.sh/chart: {{ include "common.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 backstage.io/kubernetes-id: {{ .Values.repositoryName | default "undefined" }}
+spoton.com/domain: {{ .Values.domainName }}
+spoton.com/subdomain: {{ .Values.subdomainName }}
 {{- end -}}
 
 {{/*
