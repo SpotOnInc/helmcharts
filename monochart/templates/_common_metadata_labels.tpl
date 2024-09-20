@@ -42,7 +42,7 @@ app.kubernetes.io/name: {{ include "common.name" . }}
 helm.sh/chart: {{ include "common.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-backstage.io/kubernetes-id: {{ env "RELEASE_NAME" | default "undefined" }}
+backstage.io/kubernetes-id: {{ env "REPOSITORY_NAME" | default "undefined" }}
 {{- end -}}
 
 {{/*
