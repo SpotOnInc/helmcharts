@@ -328,46 +328,44 @@ service:
   # annotations:
   #   name: value
 
-# Ref: https://archive.getambassador.io/docs/emissary/3.6/topics/using/intro-mappings
-mapping:
-  api:
-    enabled: false
-    # host: normal.{{ $AppName }}.{{ .Environment.Name }}.spoton.sh
-    # prefix: /my-prefix
-    # rewrite: /my-rewrite
-    # labels:
-    #   name: value
-    # annotations:
-    #   name: value
-  grpc:
-    enabled: false
-    # host: mygrpc.{{ $AppName }}.{{ .Environment.Name }}.spoton.sh
-    # prefix: /my-grpc
-    # grpc: true
-    # labels:
-    #   name: value
-    # annotations:
-    #   name: value
-
-# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters/oauth2
-# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters/jwt
-filter:
-  enabled: false
-  clientID: 0oa9jntm09fFIJlPJ697
-  tld: spoton.sh
-
-# Ref: https://archive.getambassador.io/docs/edge-stack/3.6/topics/using/filters
-filterPolicy:
-  enabled: false
-  excludePaths:
-    - /docs*
-    - /health*
-    - /heartbeat*
-    - /metrics*
-    - /version*
-    - /openapi.json*
-    - '*'
-  tld: spoton.sh
+ambassador:
+  tld: express-nonprod-c1.spoton.sh # determines tld after app-name, example: monochart-testing.express-nonprod-c1.spoton.sh
+# https://www.getambassador.io/docs/edge-stack/latest/topics/using/intro-mappings
+  mappings:
+    default:
+      enabled: false
+      host: myapp # host this app can be reached at, example: myapp.{tld}
+    grpc:
+      enabled: false
+      grpc: true
+      host: myapp-grpc
+# https://www.getambassador.io/docs/edge-stack/latest/topics/using/filters
+  filters:
+    user-auth:
+      enabled: false
+      clientID: "0oa9jntm09fFIJlPJ697"
+      # annotations:
+      #   description: "OAuth2 filter for user authentication"
+      # labels:
+      #   environment: "nonprod"
+      #   team: "backend"
+# https://www.getambassador.io/docs/edge-stack/latest/topics/using/filters
+  filterPolicies:
+    general-policy:
+      enabled: false
+      excludePaths: # standard set of exclude paths most filterPolicies use
+        - /docs*
+        - /health*
+        - /heartbeat*
+        - /metrics*
+        - /version*
+        - /openapi.json*
+        - '*'
+      # annotations:
+      #   description: "Paths to exclude from authentication"
+      # labels:
+      #   environment: "staging"
+      #   team: "myteam"
 
 ## ServiceMonitor CRDs to create & be scraped by the Prometheus instance.
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
