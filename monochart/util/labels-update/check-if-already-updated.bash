@@ -21,6 +21,7 @@ check_release_is_monochart() {
   chart=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
   if [[ "$chart" != spoton-monochart* ]]; then
     message "ℹ️  ${RELEASE_NAME} is not spoton-monochart. Skipping."
+    export NEEDS_UPDATING=false
     exit 0
   fi
 }
