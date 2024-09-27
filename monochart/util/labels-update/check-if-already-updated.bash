@@ -17,6 +17,24 @@ message() {
   echo
 }
 
+check_release_is_monochart() {
+  chart=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
+  if [[ "$chart" != spoton-monochart* ]]; then
+    message "ℹ️  ${RELEASE_NAME} is not spoton-monochart. Skipping."
+    exit 0
+  fi
+}
+
+get_deployment() {
+  helm_values=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
+  DEPLOYMENT=$(yq eval .fullnameOverride <<< "$helm_values")
+
+  if [[ "$DEPLOYMENT" == "null" ]]; then
+    message "⚠️  Could not determine deployment name. Exiting."
+    exit 1
+  fi
+}
+
 RELEASE_NAME=$1
 RELEASE_NAMESPACE=$2
 
@@ -28,12 +46,8 @@ if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
   exit 1
 fi
 
-helm_values=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
-DEPLOYMENT=$(yq eval .fullnameOverride <<< "$helm_values")
-if [[ "$DEPLOYMENT" == "null" ]]; then
-  message "⚠️  Could not determine deployment name. Exiting."
-  exit 1
-fi
+check_release_is_monochart
+get_deployment
 
 echo "***********************************"
 echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
