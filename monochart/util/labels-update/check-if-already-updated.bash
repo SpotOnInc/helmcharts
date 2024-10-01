@@ -22,7 +22,7 @@ check_release_is_monochart() {
   if [[ "$chart" != spoton-monochart* ]]; then
     message "ℹ️  ${RELEASE_NAME} is not spoton-monochart. Skipping."
     export NEEDS_UPDATING=false
-    exit 0
+    return
   fi
 }
 
