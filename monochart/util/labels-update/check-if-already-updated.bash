@@ -22,7 +22,6 @@ check_release_is_monochart() {
   if [[ "$chart_and_version" != spoton-monochart* ]]; then
     message "ℹ️  ${RELEASE_NAME} is not spoton-monochart. Skipping."
     export NEEDS_UPDATING=false
-    return
   fi
 }
 
@@ -48,6 +47,9 @@ if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
 fi
 
 check_release_is_monochart
+if [[ "$NEEDS_UPDATING" == "false" ]] ; then
+  return
+fi
 get_deployment
 
 echo "***********************************"
