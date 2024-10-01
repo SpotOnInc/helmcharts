@@ -48,9 +48,6 @@ if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
   exit 1
 fi
 
-echo "Skipping."
-exit 0
-
 check_release_is_monochart
 get_deployment
 SERVICE="$DEPLOYMENT"
