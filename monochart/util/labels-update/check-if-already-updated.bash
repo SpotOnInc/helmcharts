@@ -47,7 +47,7 @@ if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
 fi
 
 check_release_is_monochart
-if [[ "$NEEDS_UPDATING" == "false" ]] ; then
+if [[ "$NEEDS_UPDATING" == "false" ]]; then
   return
 fi
 get_deployment
