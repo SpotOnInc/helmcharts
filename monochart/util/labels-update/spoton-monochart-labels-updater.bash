@@ -21,7 +21,7 @@ message() {
 
 check_release_is_monochart() {
   helm_status=$(helm status -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml 2>&1 > /dev/null) || echo "$helm_status"
-  if [[ -n "$helm_status" ]] ; then
+  if [[ -n "$helm_status" ]]; then
     message "⚠️  Could not get status for ${RELEASE_NAME} in namespace ${RELEASE_NAMESPACE}. Skipping."
     exit 0
   fi
