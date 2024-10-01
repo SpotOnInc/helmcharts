@@ -37,8 +37,11 @@ get_deployment() {
   fi
 }
 
+echo "In spoton-monochart-labels-updater.bash"
 RELEASE_NAME=$1
 RELEASE_NAMESPACE=$2
+echo "RELEASE_NAME is ${RELEASE_NAME}"
+echo "RELEASE_NAMESPACE is ${RELEASE_NAMESPACE}"
 
 # Check if the required arguments are present
 if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
