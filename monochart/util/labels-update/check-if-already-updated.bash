@@ -18,7 +18,14 @@ message() {
 }
 
 check_release_is_monochart() {
-  chart=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
+  helm_status=$(helm status -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml 2>&1 > /dev/null) || echo $helm_status
+  if [[ -n "$helm_status" ]] ; then
+    message "⚠️  Could not get status for ${RELEASE_NAME} in namespace ${RELEASE_NAMESPACE}. Skipping."
+    export NEEDS_UPDATING=false
+    exit 0
+  fi
+  helm_history=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml)
+  chart=$(yq eval '.[-1].chart' <<< "$helm_history")
   if [[ "$chart" != spoton-monochart* ]]; then
     message "ℹ️  ${RELEASE_NAME} is not spoton-monochart. Skipping."
     export NEEDS_UPDATING=false
