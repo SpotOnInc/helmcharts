@@ -39,6 +39,11 @@ get_deployment() {
 
 RELEASE_NAME=$1
 RELEASE_NAMESPACE=$2
+echo
+echo "***********************************"
+echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
+echo "RELEASE_NAME: ${RELEASE_NAME}"
+echo "***********************************"
 
 # Check if the required arguments are present
 if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
@@ -53,22 +58,24 @@ get_deployment
 SERVICE="$DEPLOYMENT"
 
 echo "👷 Confirming that deployment ${DEPLOYMENT} exists before continuing..."
-check_deployment=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml 2>&1)
-if [[ "$?" == 1 ]]; then
-  if [[ "$check_deployment" =~ "not found" ]]; then
-    echo "⚠️  The deployment ${DEPLOYMENT} does not exist. Skipping."
-    exit 0
-  else
-    echo "❗ There was an error checking the deployment: $check_deployment"
-    exit 1
-  fi
+deployment_yaml=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml --ignore-not-found 2>&1)
+if [[ -z "$deployment_yaml" ]] || [[ "$deployment_yaml" =~ "not found" ]]; then
+  echo "⚠️  The deployment ${DEPLOYMENT} does not exist. Skipping."
+  exit 0
+fi
+
+label_app_name=$(yq eval .spec.template.metadata.labels.\"app.kubernetes.io/name\" <<< "$deployment_yaml")
+if [[ "$label_app_name" == "$DEPLOYMENT" ]]; then
+  echo "✅ Deployment ${DEPLOYMENT} is already updated."
+  exit 0
+else
+  echo "ℹ️  Deployment ${DEPLOYMENT} needs updating."
 fi
 
 TEMP_DEPLOYMENT="${DEPLOYMENT}-temp"
 
+echo
 echo "***********************************"
-echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
-echo "RELEASE_NAME: ${RELEASE_NAME}"
 echo "DEPLOYMENT: ${DEPLOYMENT}"
 echo "SERVICE: ${SERVICE}"
 echo "TEMP_DEPLOYMENT: ${TEMP_DEPLOYMENT}"
