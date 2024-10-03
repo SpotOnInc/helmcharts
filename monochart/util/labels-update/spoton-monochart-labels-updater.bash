@@ -20,8 +20,8 @@ message() {
 }
 
 check_release_is_monochart() {
-  chart=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
-  if [[ "$chart" != spoton-monochart* ]]; then
+  chart_and_version=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
+  if [[ "$chart_and_version" != spoton-monochart* ]]; then
     message "ℹ️  ${RELEASE_NAME} is not spoton-monochart. Skipping."
     exit 0
   fi
@@ -47,9 +47,6 @@ if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
   message '    - RELEASE_NAMESPACE - e.g. staging'
   exit 1
 fi
-
-echo "Skipping."
-exit 0
 
 check_release_is_monochart
 get_deployment

@@ -18,11 +18,10 @@ message() {
 }
 
 check_release_is_monochart() {
-  chart=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
-  if [[ "$chart" != spoton-monochart* ]]; then
+  chart_and_version=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
+  if [[ "$chart_and_version" != spoton-monochart* ]]; then
     message "ℹ️  ${RELEASE_NAME} is not spoton-monochart. Skipping."
     export NEEDS_UPDATING=false
-    exit 0
   fi
 }
 
@@ -47,31 +46,34 @@ if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
   exit 1
 fi
 
+NEEDS_UPDATING=''
 check_release_is_monochart
-get_deployment
+if [[ "$NEEDS_UPDATING" != "false" ]]; then
+  get_deployment
 
-echo "***********************************"
-echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
-echo "RELEASE_NAME: ${RELEASE_NAME}"
-echo "DEPLOYMENT: ${DEPLOYMENT}"
-echo "***********************************"
+  echo "***********************************"
+  echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
+  echo "RELEASE_NAME: ${RELEASE_NAME}"
+  echo "DEPLOYMENT: ${DEPLOYMENT}"
+  echo "***********************************"
 
-deployment_yaml=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml 2>&1)
-if [[ "$?" == 1 ]]; then
-  if [[ "$deployment_yaml" =~ "not found" ]]; then
-    echo "⚠️  The deployment ${DEPLOYMENT} does not exist."
-    exit 1
-  else
-    echo "❗ There was an error checking the deployment: $deployment_yaml"
-    exit 1
+  deployment_yaml=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml 2>&1)
+  if [[ "$?" == 1 ]]; then
+    if [[ "$deployment_yaml" =~ "not found" ]]; then
+      echo "⚠️  The deployment ${DEPLOYMENT} does not exist."
+      exit 1
+    else
+      echo "❗ There was an error checking the deployment: $deployment_yaml"
+      exit 1
+    fi
   fi
-fi
 
-label_app_name=$(yq eval .spec.template.metadata.labels.\"app.kubernetes.io/name\" <<< "$deployment_yaml")
-if [[ "$label_app_name" == "$DEPLOYMENT" ]]; then
-  echo "Already updated."
-  export NEEDS_UPDATING=false
-else
-  echo "Needs updating."
-  export NEEDS_UPDATING=true
+  label_app_name=$(yq eval .spec.template.metadata.labels.\"app.kubernetes.io/name\" <<< "$deployment_yaml")
+  if [[ "$label_app_name" == "$DEPLOYMENT" ]]; then
+    echo "Already updated."
+    export NEEDS_UPDATING=false
+  else
+    echo "Needs updating."
+    export NEEDS_UPDATING=true
+  fi
 fi
