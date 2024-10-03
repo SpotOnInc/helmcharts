@@ -22,7 +22,7 @@ message() {
 check_release_is_monochart() {
   chart_and_version=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
   if [[ "$chart_and_version" != spoton-monochart* ]]; then
-    message "ℹ️  ${RELEASE_NAME} is not spoton-monochart. Skipping."
+    message "ℹ️ ${RELEASE_NAME} is not spoton-monochart. Skipping."
     exit 0
   fi
 }
@@ -40,10 +40,10 @@ get_deployment() {
 RELEASE_NAME=$1
 RELEASE_NAMESPACE=$2
 echo
-echo "***********************************"
+echo "************************************************************"
 echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
 echo "RELEASE_NAME: ${RELEASE_NAME}"
-echo "***********************************"
+echo "************************************************************"
 
 # Check if the required arguments are present
 if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
@@ -69,23 +69,21 @@ if [[ "$label_app_name" == "$DEPLOYMENT" ]]; then
   echo "✅ Deployment ${DEPLOYMENT} is already updated."
   exit 0
 else
-  echo "ℹ️  Deployment ${DEPLOYMENT} needs updating."
+  echo "ℹ️ Deployment ${DEPLOYMENT} needs updating."
 fi
 
 TEMP_DEPLOYMENT="${DEPLOYMENT}-temp"
 
 echo
-echo "***********************************"
 echo "DEPLOYMENT: ${DEPLOYMENT}"
 echo "SERVICE: ${SERVICE}"
 echo "TEMP_DEPLOYMENT: ${TEMP_DEPLOYMENT}"
-echo "***********************************"
 
 ##################################################
 # DRY RUN START
 # Remove this block to make the script active.
 echo
-echo "⚠️  This was a dry run. No changes were made."
+echo "⚠️ This was a dry run. No changes were made."
 echo
 exit 0
 # DRY RUN END
