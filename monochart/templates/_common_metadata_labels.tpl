@@ -42,6 +42,9 @@ app.kubernetes.io/name: {{ include "common.name" . }}
 helm.sh/chart: {{ include "common.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+backstage.io/kubernetes-id: {{ .Values.repositoryName | default "undefined" }}
+spoton.com/domain: {{ .Values.domainName | default "undefined" }}
+spoton.com/subdomain: {{ .Values.subdomainName | default "undefined" }}
 {{- end -}}
 
 {{/*
