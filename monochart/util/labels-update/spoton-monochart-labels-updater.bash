@@ -19,8 +19,31 @@ message() {
   echo
 }
 
+check_release_is_monochart() {
+  chart_and_version=$(helm history -n "$RELEASE_NAMESPACE" "$RELEASE_NAME" -o yaml | yq '.[-1].chart')
+  if [[ "$chart_and_version" != spoton-monochart* ]]; then
+    message "ℹ️ ${RELEASE_NAME} is not spoton-monochart. Skipping."
+    exit 0
+  fi
+}
+
+get_deployment() {
+  helm_values=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
+  DEPLOYMENT=$(yq eval .fullnameOverride <<< "$helm_values")
+
+  if [[ "$DEPLOYMENT" == "null" ]]; then
+    message "⚠️  Could not determine deployment name. Exiting."
+    exit 1
+  fi
+}
+
 RELEASE_NAME=$1
 RELEASE_NAMESPACE=$2
+echo
+echo "************************************************************"
+echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
+echo "RELEASE_NAME: ${RELEASE_NAME}"
+echo "************************************************************"
 
 # Check if the required arguments are present
 if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
@@ -30,35 +53,41 @@ if [[ -z "$RELEASE_NAME" ]] || [[ -z "$RELEASE_NAMESPACE" ]]; then
   exit 1
 fi
 
-helm_values=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
-DEPLOYMENT=$(yq eval .fullnameOverride <<< "$helm_values")
+check_release_is_monochart
+get_deployment
 SERVICE="$DEPLOYMENT"
-if [[ "$DEPLOYMENT" == "null" ]]; then
-  message "⚠️  Could not determine deployment name. Exiting."
-  exit 1
-fi
 
 echo "👷 Confirming that deployment ${DEPLOYMENT} exists before continuing..."
-check_deployment=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml 2>&1)
-if [[ "$?" == 1 ]]; then
-  if [[ "$check_deployment" =~ "not found" ]]; then
-    echo "⚠️  The deployment ${DEPLOYMENT} does not exist. Skipping."
-    exit 0
-  else
-    echo "❗ There was an error checking the deployment: $check_deployment"
-    exit 1
-  fi
+deployment_yaml=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml --ignore-not-found 2>&1)
+if [[ -z "$deployment_yaml" ]] || [[ "$deployment_yaml" =~ "not found" ]]; then
+  echo "⚠️  The deployment ${DEPLOYMENT} does not exist. Skipping."
+  exit 0
+fi
+
+label_app_name=$(yq eval .spec.template.metadata.labels.\"app.kubernetes.io/name\" <<< "$deployment_yaml")
+if [[ "$label_app_name" == "$DEPLOYMENT" ]]; then
+  echo "✅ Deployment ${DEPLOYMENT} is already updated."
+  exit 0
+else
+  echo "ℹ️ Deployment ${DEPLOYMENT} needs updating."
 fi
 
 TEMP_DEPLOYMENT="${DEPLOYMENT}-temp"
 
-echo "***********************************"
-echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
-echo "RELEASE_NAME: ${RELEASE_NAME}"
+echo
 echo "DEPLOYMENT: ${DEPLOYMENT}"
 echo "SERVICE: ${SERVICE}"
 echo "TEMP_DEPLOYMENT: ${TEMP_DEPLOYMENT}"
-echo "***********************************"
+
+##################################################
+# DRY RUN START
+# Remove this block to make the script active.
+echo
+echo "⚠️ This was a dry run. No changes were made."
+echo
+exit 0
+# DRY RUN END
+##################################################
 
 # Create a temp deployment (same except for the name)
 message '👷 Creating temp deployment...'

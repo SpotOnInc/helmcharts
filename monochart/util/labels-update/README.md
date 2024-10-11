@@ -11,8 +11,3 @@ It is intended to be run in a deployment pipeline. Here are the steps it perform
 2. Remove the old deployment.
 3. Create a new deployment (with the original name) which contains the updated labels.
 4. Remove the temporary deployment.
-
-### `check-if-already-updated.bash`
-
-This utility script simply checks if a pod deployment's labels have already been updated. It is
-intended to be run from a deployment pipeline.
