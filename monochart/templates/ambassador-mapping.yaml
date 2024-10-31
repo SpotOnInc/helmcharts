@@ -24,7 +24,7 @@ spec:
   {{- if $mapping.rewrite }}
   rewrite: {{ $mapping.rewrite }}
   {{- end }}
-  service: {{ include "common.fullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local
+  service: {{ $mapping.service | default (printf "%s" (include "common.fullname" $root )) }}.{{ $root.Release.Namespace }}.svc.cluster.local
   timeout_ms: {{ $mapping.timeout_ms | default 60000 }}
 {{- end -}}
 {{- end -}}
