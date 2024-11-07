@@ -33,7 +33,7 @@ spec:
 {{- end }}
 {{- else }}
   selector:
-{{- include "common.labels.standard" . | nindent 4 }}
+{{- include "common.labels.short" . | nindent 4 }}
     serve: "true"
 {{- end -}}
 {{- end -}}
