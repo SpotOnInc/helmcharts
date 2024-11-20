@@ -222,10 +222,10 @@ Ingress annotation indicating we want to use Application Load Balancer are neces
         ingress:
           default:
             enabled: true
+            className: alb
             annotations:
-              kubernetes.io/ingress.class: "alb"
               # Ingresses with the same group will use the same Load Balancer rather than create new one
-              alb.ingress.kubernetes.io/group.name: common
+              alb.ingress.kubernetes.io/group.name: '{{ $AppName }}'
               alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
               alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
               # Target type "IP" is required for service type "ClusterIP"
