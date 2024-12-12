@@ -14,7 +14,7 @@ metadata:
 {{- with .Values.deployment.labels }}
 {{ toYaml .| indent 4 }}
 {{- end }}
-    # https://github.com/vhs-spoton/personal-doc/blob/main/networkpolices.md
+    # https://docs.corp.spoton.sh/operations/kubernetes/network-policies/
     {{- if .Values.networkPolicy.enabled }}
     spoton.NetPolicy: enabled
         {{- if .Values.networkPolicy.DenyALL.enabled }}
