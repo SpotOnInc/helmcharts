@@ -20,8 +20,8 @@ spec:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
   policyTypes:
-    - Ingress
-    - Egress
+  - Ingress
+  - Egress
 
 {{/* Allow DNS traffic by default. */}}
 ---
@@ -41,14 +41,14 @@ spec:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
   policyTypes:
-    - Egress
+  - Egress
   egress:
-    - to:
-      ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
+  - to:
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
 
 {{/* Allow TCP/443 traffic by default. */}}
 ---
@@ -68,12 +68,12 @@ spec:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
   policyTypes:
-    - Egress
+  - Egress
   egress:
-    - to:
-      ports:
-        - protocol: TCP
-          port: 443
+  - to:
+    ports:
+    - protocol: TCP
+      port: 443
 
 {{/* Allow KIAM traffic by default. */}}
 ---
@@ -93,77 +93,18 @@ spec:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
   policyTypes:
-    - Egress
+  - Egress
   egress:
-    - to:
-        - ipBlock:
-            cidr: 169.254.169.254/32
-      ports:
-        - protocol: TCP
-          port: 80
-{{- if not .Values.networkPolicy.AllowO11y.enabled }}
-{{/* Allow O11y traffic by default when DenyALL enabled */}}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: "{{ include "common.fullname" $root }}-allow-o11y"
-  namespace: {{ $root.Release.Namespace }}
-{{- with $root.Values.networkPolicy.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
-  labels:
-{{ include "common.labels.standard" $root | indent 4 }}
-spec:
-  podSelector:
-    matchLabels:
-{{ include "common.labels.standard" $root | indent 6 }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: o11y
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/instance: grafana-k8s-monitoring
-{{- end }}
-{{/* End AllowO11y DenyALL */}}
+  - to:
+    - ipBlock:
+        cidr: 169.254.169.254/32
+    ports:
+    - protocol: TCP
+      port: 80
+
 {{/* End DenyALL */}}
 {{- end }}
 
-{{- if .Values.networkPolicy.AllowO11y.enabled }}
-{{/* Allow O11y traffic with optional parameter */}}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: "{{ include "common.fullname" $root }}-allow-o11y"
-  namespace: {{ $root.Release.Namespace }}
-{{- with $root.Values.networkPolicy.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
-  labels:
-{{ include "common.labels.standard" $root | indent 4 }}
-spec:
-  podSelector:
-    matchLabels:
-{{ include "common.labels.standard" $root | indent 6 }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: o11y
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/instance: grafana-k8s-monitoring
-{{- end }}
-{{/* End AllowO11y */}}
 {{/* Make a loop over all the INGRESS rules*/}}
 {{- if .Values.networkPolicy.Ingress }}
 {{- range $NetPolicy := .Values.networkPolicy.Ingress }}
@@ -184,37 +125,37 @@ spec:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
   policyTypes:
-    - Ingress
+  - Ingress
   ingress:
-    - from:
-    {{- range $NPSelector, $NPValue := $NetPolicy.selector }}
-      {{- if eq $NPSelector "ipBlock" }}
-      {{ if not (eq $NetPolicy.selector.operator "And") -}}-{{ end }} ipBlock:
-        {{- range $NetPolicy.selector.ipBlock }}
-          cidr: {{ . }}
-        {{- end }}
+  - from:
+  {{- range $NPSelector, $NPValue := $NetPolicy.selector }}
+    {{- if eq $NPSelector "ipBlock" }}
+    - ipBlock:
+      {{- range $NetPolicy.selector.ipBlock }}
+        cidr: {{ . }}
       {{- end }}
+    {{- end }}
 
     {{- if eq $NPSelector "namespaceSelector" }}
       {{- range $key, $value := $NetPolicy.selector.namespaceSelector }}
-      {{ if not (eq $NetPolicy.selector.operator "And") -}}-{{- end }} namespaceSelector:
-          matchLabels:
-            {{ $key }}: {{ $value }}
-        {{- end }}
+    - namespaceSelector:
+        matchLabels:
+          {{ $key }}: {{ $value }}
+      {{- end }}
     {{- end }}
 
     {{- if eq $NPSelector "podSelector" }}
       {{- range $key, $value := $NetPolicy.selector.podSelector }}
-      {{ if not (eq $NetPolicy.selector.operator "And") -}}-{{- end }} podSelector:
-          matchLabels:
-            {{ $key }}: {{ $value }}
-        {{- end }}
+    - podSelector:
+        matchLabels:
+          {{ $key }}: {{ $value }}
+      {{- end }}
     {{- end }}
   {{- end }}
-      {{- with $NetPolicy.ports }}
-      ports:
-        {{- $NetPolicy.ports | toYaml | nindent 8 }}
-      {{- end }}
+  - ports:
+    {{- range $NPports := $NetPolicy.ports }}
+    - {{- $NPports | toYaml | nindent 6 -}}
+    {{- end }}
 
 {{/* End Ingress */}}
 {{- end }}
@@ -241,37 +182,37 @@ spec:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
   policyTypes:
-    - Egress
+  - Egress
   egress:
-    - to:
-    {{- range $NPSelector, $NPValue := $NetPolicy.selector }}
-      {{- if eq $NPSelector "ipBlock" }}
-      {{ if not (eq $NetPolicy.selector.operator "And") -}}-{{- end }} ipBlock:
-        {{- range $NetPolicy.selector.ipBlock }}
-          cidr: {{ . }}
-        {{- end }}
+  - to:
+  {{- range $NPSelector, $NPValue := $NetPolicy.selector }}
+    {{- if eq $NPSelector "ipBlock" }}
+    - ipBlock:
+      {{- range $NetPolicy.selector.ipBlock }}
+        cidr: {{ . }}
       {{- end }}
+    {{- end }}
 
-      {{- if eq $NPSelector "namespaceSelector" }}
-        {{- range $key, $value := $NetPolicy.selector.namespaceSelector }}
-      {{ if not (eq $NetPolicy.selector.operator "And") -}}-{{- end }} namespaceSelector:
-          matchLabels:
-            {{ $key }}: {{ $value }}
-        {{- end }}
+    {{- if eq $NPSelector "namespaceSelector" }}
+      {{- range $key, $value := $NetPolicy.selector.namespaceSelector }}
+    - namespaceSelector:
+        matchLabels:
+          {{ $key }}: {{ $value }}
       {{- end }}
+    {{- end }}
 
-      {{- if eq $NPSelector "podSelector" }}
-        {{- range $key, $value := $NetPolicy.selector.podSelector }}
-      {{ if not (eq $NetPolicy.selector.operator "And") -}}-{{- end }} podSelector:
-          matchLabels:
-            {{ $key }}: {{ $value }}
-        {{- end }}
+    {{- if eq $NPSelector "podSelector" }}
+      {{- range $key, $value := $NetPolicy.selector.podSelector }}
+    - podSelector:
+        matchLabels:
+          {{ $key }}: {{ $value }}
       {{- end }}
+    {{- end }}
   {{- end }}
-      {{- with $NetPolicy.ports }}
-      ports:
-        {{- $NetPolicy.ports | toYaml | nindent 8 }}
-      {{- end }}
+  - ports:
+    {{- range $NPports := $NetPolicy.ports }}
+    - {{- $NPports | toYaml | nindent 6 -}}
+    {{- end }}
 
 {{/* End Egress */}}
 {{- end }}
