@@ -630,7 +630,7 @@ IncludeForecastleEnv:
 
 
 # Networkpolices https://kubernetes.io/docs/concepts/services-networking/network-policies/
-# Spoton documentation https://docs.corp.spoton.sh/operations/kubernetes/network-policies/
+# Spoton documentation https://github.com/vhs-spoton/personal-doc/blob/main/networkpolices.md
 # If enable, will allow or deny input or output traffic to specific port/pod/namespace/cidr.
 networkPolicy:
   enabled: false
@@ -640,10 +640,6 @@ networkPolicy:
   # This will disable all the input/output traffic by default, except the DNS queries, TCP/443 and KIAM traffic (TCP/80 for 169.254.169.254).
   # Is recommendable to have it disabled at begin to make tests, but enable it on production.
   DenyALL:
-    enabled: false
-
-  # This will allow the traffic to the O11y service
-  AllowO11y:
     enabled: true
 
   # The input traffic rules. Each pod can have many input rules or a combination of they in one rule. Some examples:
@@ -654,7 +650,7 @@ networkPolicy:
   # Allow all traffic from everyone on port 443.
   # Allow all traffic from 8.8.8.8 on port 80 and 21
   # We can use 3 types of Selector ipBlock, namespaceSelector and podSelector, plus the ports (port and protocol)
-  # VERY IMPORTANT... using more than one selector will work as "OR" unless you'll specify selector.operator: "And"
+  # VERY IMPORTANT... using more than one selector will work as "OR" not like as "AND" in this template.
 
   # In the example above, we are allowing the input traffic from the IPs 8.8.8.8 OR 1.1.1.1 OR from namespace: staging
   # OR namespace: prod OR pods with the role "frontend" on the ports 5432/TCP and 123/UDP
@@ -687,10 +683,6 @@ networkPolicy:
 
   # # The EGRESS rules will filter all the output traffic and is than necesary like the ingress.
   Egress: {}
-  #   # To allow all egress traffic, you can leave empty map for selector of egress.
-  #   - name: allow-all-egress
-  #     selector: {}
-
   #   # In this example we are allowing traffic HTTP and HTTPS to all destinationes (not very good, but is ok)
   #   - name: http-and-https
   #     ports:
