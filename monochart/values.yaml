@@ -92,10 +92,6 @@ secrets: {}
 # Basically we need to add a name to the resource and all the secrets/values that we want.
 # the secret name can be changed without problem, but the resource name or the value *NO*
 # To create a sealedsecrets you can use the webseal or https://webseal.qa.spoton.sh/
-# This requires the sealedsecrets controller to be installed in the cluster first. See https://github.com/SpotOnInc/infrastructure/blob/main/stacks/catalog/eks/cluster-services/sealed-secrets.yaml
-# To create a sealedsecret in a different cluster, you can use the kubeseal command line tool with the public key of the cluster. (This is outputed in the logs of the sealedsecrets controller)
-#   Following this, you can get the encrypted data using: (cluster-wide is important here, monochart expects a cluster-wide secret for easier sealedsecret management)
-#     kubeseal --cert sealedsecret.pub --scope cluster-wide --format yaml <unencrypted-secret.yaml >sealed-secret.yaml
 # To make sure a secret gets created before pod creation, use the extraAnnotations provided in the google-secrets example
 # NOTE: remember to add the sealedsecret name to the "envFrom.secrets" above.
 sealedsecrets:
