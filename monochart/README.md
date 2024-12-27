@@ -74,7 +74,7 @@ The first will create a **sealed secret** resource called google-secrets with tw
 
 The second, will setup this secret inside of the containers.
 
-The third and fourth, will set up a volume using a volume mount, that will create a file inside of the pod for each secret defined under encryped_data. (using this example, we should get a file named SECRET_NAME with the unencrypted data as the content, and same for ANOTHER_SECRET. )
+The third and fourth, will set up a volume using a volume mount, that will create a file inside of the pod for each secret defined under encrypedData. (using this example, we should get a file named SECRET_NAME with the unencrypted data as the content, and same for ANOTHER_SECRET. )
 
 > Note: To generate you can use [kubeseal](https://github.com/bitnami-labs/sealed-secrets#installation-from-source) from CLI or you can use the Spoton [WebSeal](https://webseal.qa.spoton.sh/) interface.
 
