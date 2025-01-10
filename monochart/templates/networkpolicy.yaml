@@ -78,8 +78,8 @@ spec:
     ports:
     - protocol: TCP
       port: 443
-        - protocol: TCP
-          port: 80
+    - protocol: TCP
+      port: 80
 {{- end }}
 {{/* End allow-http-https */}}
 {{/* Allow KOPS KIAM traffic */}}
