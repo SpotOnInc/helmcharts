@@ -3,8 +3,8 @@
 {{- range $name, $filter := .Values.ambassador.filters -}}
 {{- if $filter.enabled }}
 {{- $dnsName := include "common.fullname" $root -}}
-{{- if $filterPolicy.dnsNameOverride -}}
-{{-   $dnsName = $filterPolicy.dnsNameOverride -}}
+{{- if $filter.dnsNameOverride -}}
+{{-   $dnsName = $filter.dnsNameOverride -}}
 {{- end -}}
 ---
 apiVersion: getambassador.io/v3alpha1
