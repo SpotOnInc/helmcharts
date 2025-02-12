@@ -354,6 +354,8 @@ ambassador:
       # labels:
       #   environment: "nonprod"
       #   team: "backend"
+      ## If the DNS name is "app-alias.TLD", different from "appName", override the hostname.  (TLD stays the same)
+      # dnsNameOverride: app-alias
 # https://www.getambassador.io/docs/edge-stack/latest/topics/using/filters
   filterPolicies:
     general-policy:
@@ -365,12 +367,14 @@ ambassador:
         - /metrics*
         - /version*
         - /openapi.json*
-        - '*'
       # annotations:
       #   description: "Paths to exclude from authentication"
       # labels:
       #   environment: "staging"
       #   team: "myteam"
+      ## If the DNS name is "app-alias.TLD", different from "appName", override the hostname.  (TLD stays the same)
+      ## Must also be a dnsNameOverride in the filters section above to make them match!
+      # dnsNameOverride: app-alias
 
 ## ServiceMonitor CRDs to create & be scraped by the Prometheus instance.
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
