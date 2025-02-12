@@ -20,14 +20,14 @@ metadata:
 spec:
   rules:
     {{- range $path := $filterPolicy.excludePaths }}
-    - host: {{ include "common.name" $root }}.{{ $.Values.ambassador.tld }}
+    - host: {{ include "common.fullname" $root }}.{{ $.Values.ambassador.tld }}
       path: {{ quote $path }}
       filters:
         - name: ambassador-okta-central-filter
           namespace: ambassador
           onDeny: continue
           onAllow: break
-        - name: ambassador-{{ include "common.name" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
+        - name: ambassador-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
           namespace: ambassador
     {{- end }}
 {{- end -}}
