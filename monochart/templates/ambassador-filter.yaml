@@ -28,7 +28,7 @@ spec:
     clientSessionMaxIdle: 0s
     grantType: '""'
     protectedOrigins:
-    - origin: https://{{ include "common.fullname" $root }}.{{ $.Release.Namespace }}.{{ $.Values.ambassador.tld }}
+    - origin: https://{{ include "common.fullname" $root }}.{{ $.Values.ambassador.tld }}
     secretName: ambassador-oauth2-client-secret
     secretNamespace: ambassador
 {{- end -}}

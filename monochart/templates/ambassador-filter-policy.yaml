@@ -20,7 +20,7 @@ metadata:
 spec:
   rules:
     {{- range $path := $filterPolicy.excludePaths }}
-    - host: {{ include "common.fullname" $root }}.{{ $.Release.Namespace }}.{{ $.Values.ambassador.tld }}
+    - host: {{ include "common.fullname" $root }}.{{ $.Values.ambassador.tld }}
       path: {{ quote $path }}
       filters:
         - name: ambassador-okta-central-filter
