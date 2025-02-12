@@ -2,6 +2,10 @@
 {{- if .Values.ambassador.filterPolicies -}}
 {{- range $name, $filterPolicy := .Values.ambassador.filterPolicies -}}
 {{- if $filterPolicy.enabled -}}
+{{- $dnsName := include "common.fullname" $root -}}
+{{- if $filterPolicy.dnsNameOverride -}}
+{{-   $dnsName = $filterPolicy.dnsNameOverride -}}
+{{- end -}}
 ---
 apiVersion: getambassador.io/v3alpha1
 kind: FilterPolicy
@@ -20,7 +24,7 @@ metadata:
 spec:
   rules:
     {{- range $path := $filterPolicy.excludePaths }}
-    - host: {{ include "common.fullname" $root }}.{{ $.Values.ambassador.tld }}
+    - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: {{ quote $path }}
       filters:
         - name: ambassador-okta-central-filter
