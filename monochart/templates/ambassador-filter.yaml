@@ -13,7 +13,7 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" . | indent 4 }}
+{{ include "common.labels.standard" $root | indent 4 }}
 {{- with $filter.labels }}
 {{ toYaml .| indent 4 }}
 {{- end }}
