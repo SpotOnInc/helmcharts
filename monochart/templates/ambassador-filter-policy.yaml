@@ -34,14 +34,14 @@ spec:
         - name: {{ $dnsName }}-okta-sso-filter
           namespace: ambassador
     {{- end }}
-    {{- if $filterPolicy.merchantFilter }}
+    {{- if $filterPolicy.merchantFilter.enabled }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
         - name: okta-merchant-filter
           namespace: ambassador
     {{- end }}
-    {{- if $filterPolicy.centralFilter }}
+    {{- if $filterPolicy.centralFilter.enabled }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
