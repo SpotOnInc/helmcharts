@@ -35,7 +35,7 @@ spec:
           namespace: ambassador
     {{- end }}
     {{- with $filterPolicy.merchantFilter }}
-    {{-   if .enabled }}
+    {{-   if .enabled == true }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
@@ -44,7 +44,7 @@ spec:
     {{-   end }}
     {{- end }}
     {{- with $filterPolicy.centralFilter }}
-    {{-   if .enabled }}
+    {{-   if .enabled == true }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
