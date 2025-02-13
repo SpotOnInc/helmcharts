@@ -34,8 +34,8 @@ spec:
         - name: {{ $dnsName }}-okta-sso-filter
           namespace: ambassador
     {{- end }}
-    {{- range $merchantFilter := $filterPolicy.merchantFilter }}
-    {{-   if $merchantFilter.enabled }}
+    {{- with $filterPolicy.merchantFilter }}
+    {{-   if .enabled }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
@@ -43,8 +43,8 @@ spec:
           namespace: ambassador
     {{-   end }}
     {{- end }}
-    {{- range $centralFilter := $filterPolicy.centralFilter }}
-    {{-   if $centralFilter.enabled }}
+    {{- with $filterPolicy.centralFilter }}
+    {{-   if .enabled }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
