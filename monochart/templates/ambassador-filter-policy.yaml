@@ -31,7 +31,21 @@ spec:
           namespace: ambassador
           onDeny: continue
           onAllow: break
-        - name: ambassador-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
+        - name: {{ $dnsName }}-okta-sso-filter
+          namespace: ambassador
+    {{- end }}
+    {{- if $filterPolicy.merchantFilter }}
+    - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
+      path: "*"
+      filters:
+        - name: okta-merchant-filter
+          namespace: ambassador
+    {{- end }}
+    {{- if $filterPolicy.centralFilter }}
+    - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
+      path: "*"
+      filters:
+        - name: okta-central-filter
           namespace: ambassador
     {{- end }}
 {{- end -}}
