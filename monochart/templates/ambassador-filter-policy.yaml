@@ -34,19 +34,23 @@ spec:
         - name: {{ $dnsName }}-okta-sso-filter
           namespace: ambassador
     {{- end }}
-    {{- if (index $filterPolicy "merchantFilter" "enabled") }}
+    {{- range $merchantFilter := $filterPolicy.merchantFilter }}
+    {{-   if $merchantFilter.enabled }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
         - name: okta-merchant-filter
           namespace: ambassador
+    {{-   end }}
     {{- end }}
-    {{- if (index $filterPolicy "centralFilter" "enabled") }}
+    {{- range $centralFilter := $filterPolicy.centralFilter }}
+    {{-   if $centralFilter.enabled }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
         - name: okta-central-filter
           namespace: ambassador
+    {{-   end }}
     {{- end }}
 {{- end -}}
 {{- end -}}
