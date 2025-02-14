@@ -27,7 +27,7 @@ spec:
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: {{ quote $path }}
       filters:
-        - name: ambassador-okta-central-filter
+        - name: okta-central-filter
           namespace: ambassador
           onDeny: continue
           onAllow: break
