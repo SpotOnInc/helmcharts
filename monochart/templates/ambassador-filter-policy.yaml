@@ -34,7 +34,7 @@ spec:
         - name: {{ $dnsName }}-okta-sso-filter
           namespace: ambassador
     {{- end }}
-    {{- if (($filterPolicy.merchantFilter).enabled }}
+    {{- if (($filterPolicy.merchantFilter).enabled) }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: "*"
       filters:
