@@ -367,10 +367,10 @@ ambassador:
         - /metrics*
         - /version*
         - /openapi.json*
-    merchantFilter:
-      enabled: false
-    centralFilter:
-      enabled: false
+      merchantFilter:
+        enabled: false
+      centralFilter:
+        enabled: false
       # annotations:
       #   description: "Paths to exclude from authentication"
       # labels:
