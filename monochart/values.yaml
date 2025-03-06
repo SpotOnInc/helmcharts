@@ -360,6 +360,7 @@ ambassador:
   filterPolicies:
     general-policy:
       enabled: false
+      # custom_filter_name: "my-custom-filter"
       excludePaths: # standard set of exclude paths most filterPolicies use
         - /docs*
         - /health*

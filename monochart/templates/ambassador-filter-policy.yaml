@@ -31,8 +31,13 @@ spec:
           namespace: ambassador
           onDeny: continue
           onAllow: break
+        {{- if $filterPolicy.custom_filter_name }}
+        - name: {{ $filterPolicy.custom_filter_name }}
+          namespace: ambassador
+        {{- else }}
         - name: {{ $dnsName }}-okta-sso-filter
           namespace: ambassador
+        {{- end }}
     {{- end }}
     {{- if (($filterPolicy.merchantFilter).enabled) }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
