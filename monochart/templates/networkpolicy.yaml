@@ -1,45 +1,47 @@
 {{- $root := . -}}
-{{- if .Values.networkPolicy.enabled }}
-
-{{- if .Values.networkPolicy.DenyALL.enabled }}
+{{/* Definitions */}}
+{{/* Block all Ingress and Egress traffic */}}
+{{- define "deny-all" }}
 ---
-{{/* Block all traffic by default. */}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: "{{ include "common.fullname" $root }}-deny-all"
-  namespace: {{ $root.Release.Namespace }}
-{{- with $root.Values.networkPolicy.annotations }}
+  name: "{{ include "common.fullname" . }}-deny-all"
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.networkPolicy.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" $root | indent 4 }}
+{{ include "common.labels.standard" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-{{ include "common.labels.standard" $root | indent 6 }}
+{{ include "common.labels.standard" . | indent 6 }}
   policyTypes:
   - Ingress
   - Egress
+{{- end }}
 
-{{/* Allow DNS traffic by default. */}}
+{{/* End deny-all */}}
+{{/* Allow DNS traffic */}}
+{{- define "allow-dns" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: "{{ include "common.fullname" $root }}-allow-dns"
-  namespace: {{ $root.Release.Namespace }}
-{{- with $root.Values.networkPolicy.annotations }}
+  name: "{{ include "common.fullname" . }}-allow-dns"
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.networkPolicy.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" $root | indent 4 }}
+{{ include "common.labels.standard" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-{{ include "common.labels.standard" $root | indent 6 }}
+{{ include "common.labels.standard" . | indent 6 }}
   policyTypes:
   - Egress
   egress:
@@ -49,24 +51,26 @@ spec:
       port: 53
     - protocol: TCP
       port: 53
-
-{{/* Allow TCP/443 traffic by default. */}}
+{{- end }}
+{{/* End allow-dns */}}
+{{/* Allow HTTP and HTTPS traffic */}}
+{{- define "allow-http-https" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: "{{ include "common.fullname" $root }}-allow-tcp-443"
-  namespace: {{ $root.Release.Namespace }}
-{{- with $root.Values.networkPolicy.annotations }}
+  name: "{{ include "common.fullname" . }}-allow-tcp-443"
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.networkPolicy.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" $root | indent 4 }}
+{{ include "common.labels.standard" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-{{ include "common.labels.standard" $root | indent 6 }}
+{{ include "common.labels.standard" . | indent 6 }}
   policyTypes:
   - Egress
   egress:
@@ -74,37 +78,87 @@ spec:
     ports:
     - protocol: TCP
       port: 443
-
-{{/* Allow KIAM traffic by default. */}}
+    - protocol: TCP
+      port: 80
+{{- end }}
+{{/* End allow-http-https */}}
+{{/* Allow KOPS KIAM traffic */}}
+{{- define "allow-kops-kiam" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: "{{ include "common.fullname" $root }}-allow-kiam"
-  namespace: {{ $root.Release.Namespace }}
-{{- with $root.Values.networkPolicy.annotations }}
+  name: "{{ include "common.fullname" . }}-allow-kiam"
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.networkPolicy.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" $root | indent 4 }}
+{{ include "common.labels.standard" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-{{ include "common.labels.standard" $root | indent 6 }}
+{{ include "common.labels.standard" . | indent 6 }}
   policyTypes:
   - Egress
   egress:
-  - to:
-    - ipBlock:
-        cidr: 169.254.169.254/32
-    ports:
-    - protocol: TCP
-      port: 80
-
-{{/* End DenyALL */}}
+    - to:
+        - ipBlock:
+            cidr: 169.254.169.254/32
+      ports:
+        - protocol: TCP
+          port: 80
 {{- end }}
+{{/* End allow-kops-kiam */}}
+{{/* Allow o11y traffic */}}
+{{- define "allow-o11y" }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "{{ include "common.fullname" . }}-allow-o11y"
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.networkPolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "common.labels.standard" . | indent 6 }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: o11y
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: grafana-k8s-monitoring
+{{- end }}
+{{/* End allow-o11y */}}
+{{/* End Definitions */}}
 
+{{/* Start Template */}}
+{{- if .Values.networkPolicy.enabled }}
+{{/* denyALL set of policies */}}
+{{- if .Values.networkPolicy.DenyALL.enabled }}
+  {{- include "deny-all" . | nindent 0 }}
+  {{- include "allow-dns" . | nindent 0 }}
+  {{- include "allow-http-https" . | nindent 0 }}
+  {{- include "allow-kops-kiam" . | nindent 0 }}
+  {{- include "allow-o11y" . | nindent 0 }}
+{{- end }}
+{{/* End denyALL */}}
+{{/* Allow o11y traffic with optional parameter */}}
+{{- if .Values.networkPolicy.AllowO11y.enabled }}
+  {{- include "allow-o11y" . | nindent 0 }}
+{{- end }}
+{{/* End AllowO11y */}}
 {{/* Make a loop over all the INGRESS rules*/}}
 {{- if .Values.networkPolicy.Ingress }}
 {{- range $NetPolicy := .Values.networkPolicy.Ingress }}
@@ -157,10 +211,9 @@ spec:
     - {{- $NPports | toYaml | nindent 6 -}}
     {{- end }}
 
+{{- end }}
+{{- end }}
 {{/* End Ingress */}}
-{{- end }}
-{{- end }}
-
 
 {{/* Make a loop over all the EGRESS rules*/}}
 {{- if .Values.networkPolicy.Egress }}
@@ -214,9 +267,9 @@ spec:
     - {{- $NPports | toYaml | nindent 6 -}}
     {{- end }}
 
+{{- end }}
+{{- end }}
 {{/* End Egress */}}
-{{- end }}
-{{- end }}
 
-{{/* End Template */}}
 {{- end }}
+{{/* End Template */}}

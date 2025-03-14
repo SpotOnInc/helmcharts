@@ -655,7 +655,7 @@ networkPolicy:
 
   annotations: []
 
-  # This will disable all the input/output traffic by default, except the DNS queries, TCP/443 and KIAM traffic (TCP/80 for 169.254.169.254).
+  # This will disable all the input/output traffic by default, except the DNS queries, TCP/80, TCP/443 and KIAM traffic (TCP/80 for 169.254.169.254).
   # Is recommendable to have it disabled at begin to make tests, but enable it on production.
   DenyALL:
     enabled: true
@@ -672,7 +672,7 @@ networkPolicy:
 
   # In the example above, we are allowing the input traffic from the IPs 8.8.8.8 OR 1.1.1.1 OR from namespace: staging
   # OR namespace: prod OR pods with the role "frontend" on the ports 5432/TCP and 123/UDP
-  Ingress: {}
+  Ingress: []
   #   - name: test-ingress
   #     selector:
   #       ipBlock:
@@ -700,7 +700,11 @@ networkPolicy:
   #         protocol: TCP
 
   # # The EGRESS rules will filter all the output traffic and is than necesary like the ingress.
-  Egress: {}
+  Egress: []
+  #   # To allow all egress traffic, you can leave empty map for selector of egress.
+  #   - name: allow-all-egress
+  #     selector: {}
+
   #   # In this example we are allowing traffic HTTP and HTTPS to all destinationes (not very good, but is ok)
   #   - name: http-and-https
   #     ports:
