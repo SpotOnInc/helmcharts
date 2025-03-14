@@ -28,7 +28,7 @@ spec:
       path: {{ quote $path }}
       filters:
         {{- range $filter := $filterPolicy.customExcludePathFilters }}
-        - name: {{ $filter.name | default "okta-central-filter" }}
+        - name: {{ quote $filter.name | default "okta-central-filter" }}
           namespace: {{ $filter.namespace | default "ambassador" }}
           onDeny: {{ $filter.onDeny | default "continue" }}
           onAllow: {{ $filter.onAllow | default "break" }}
