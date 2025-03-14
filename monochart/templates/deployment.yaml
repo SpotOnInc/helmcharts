@@ -90,25 +90,40 @@ spec:
 
       {{- if .Values.initcontainers.enabled }}
       initContainers:
+      {{- if .Values.initcontainers.FirstInitContainer }}
 {{ tpl .Values.initcontainers.FirstInitContainer . | indent 6 }}
-        {{ include "monochart.env" . | indent 8 }}
-        {{- if .Values.initcontainers.extraInitContainer }}
-{{ tpl .Values.initcontainers.extraInitContainer . | indent 6 }}
-        {{ include "monochart.env" . | indent 8 }}
+        {{- if .Values.initcontainers.env }}
+        env:
+{{ toYaml .Values.initcontainers.env | indent 10 }}
+        {{- else }}
+{{ include "monochart.env" . | indent 8 }}
         {{- end }}
-
         {{- if .Values.FirstVolumeMounts }}
         volumeMounts:
-{{ tpl .Values.FirstVolumeMounts . | indent 8 }}
-        {{- if .Values.extraVolumeMounts }}
-{{ tpl .Values.extraVolumeMounts . | indent 8 }}
+{{ tpl .Values.FirstVolumeMounts . | indent 10 }}
         {{- end }}
-        {{- end }}
-
         {{- if .Values.initContainer.resources }}
         resources:
 {{ toYaml .Values.initContainer.resources | indent 10 }}
         {{- end }}
+      {{- end }}
+      {{- if .Values.initcontainers.extraInitContainer }}
+{{ tpl .Values.initcontainers.extraInitContainer . | indent 6 }}
+        {{- if .Values.initcontainers.env }}
+        env:
+{{ toYaml .Values.initcontainers.env | indent 10 }}
+        {{- else }}
+{{ include "monochart.env" . | indent 8 }}
+        {{- end }}
+        {{- if .Values.extraVolumeMounts }}
+        volumeMounts:
+{{ tpl .Values.extraVolumeMounts . | indent 10 }}
+        {{- end }}
+        {{- if .Values.initContainer.resources }}
+        resources:
+{{ toYaml .Values.initContainer.resources | indent 10 }}
+        {{- end }}
+      {{- end }}
       {{- end }}
 
 
