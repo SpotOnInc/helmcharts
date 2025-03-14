@@ -27,12 +27,23 @@ spec:
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: {{ quote $path }}
       filters:
+        {{- if $filterPolicy.customExcludePathFilters }}
+          {{- range $filter := $filterPolicy.customExcludePathFilters }}
+          - name: {{ quote $filter.name }}
+            namespace: {{ $filter.namespace | default "ambassador" }}
+            onDeny: {{ $filter.onDeny | default "continue" }}
+            {{- if $filter.onAllow }}
+            onAllow: {{ $filter.onAllow }}
+            {{- end }}
+          {{- end }}
+        {{- else }}
         - name: okta-central-filter
           namespace: ambassador
           onDeny: continue
           onAllow: break
         - name: {{ $dnsName }}-okta-sso-filter
           namespace: ambassador
+        {{- end }}
     {{- end }}
     {{- if (($filterPolicy.merchantFilter).enabled) }}
     - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}

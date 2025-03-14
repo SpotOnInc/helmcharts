@@ -367,6 +367,11 @@ ambassador:
         - /metrics*
         - /version*
         - /openapi.json*
+      # use customExcludePathFilters if paths are different from the default use case
+      # customExcludePathFilters:
+      #   - name: ""
+      #     namespace: ambassador
+      #     onDeny: continue
       merchantFilter:
         enabled: false
       centralFilter:
