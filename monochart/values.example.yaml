@@ -106,3 +106,45 @@ deployment:
             values:
             - "{{ requiredEnv "RELEASE_NAME" }}-postgresql"
         topologyKey: "kubernetes.io/hostname"
+
+job:
+  default:
+    enabled: true
+    activeDeadlineSeconds: 150
+    backoffLimit: 1
+    restartPolicy: Never
+    ttlSecondsAfterFinished: 150
+    pod:
+      annotations: {}
+        #"iam.amazonaws.com/role": 'app-role'
+      labels: {}
+      # command:
+      args: []
+
+filters:
+  user-auth:
+    enabled: false
+    clientID: "0oa9jntm09fFIJlPJ697"
+    # annotations:
+    #   description: "OAuth2 filter for user authentication"
+    # labels:
+    #   environment: "nonprod"
+    #   team: "backend"
+    dnsNameOverride: item-availability
+
+filterPolicies:
+  general-policy:
+    enabled: false
+    excludePaths: # standard set of exclude paths most filterPolicies use
+      - /docs*
+      - /health*
+      - /heartbeat*
+      - /metrics*
+      - /version*
+      - /openapi.json*
+    # annotations:
+    #   description: "Paths to exclude from authentication"
+    # labels:
+    #   environment: "staging"
+    #   team: "myteam"
+    dnsNameOverride: item-availability
