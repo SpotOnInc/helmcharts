@@ -14,6 +14,7 @@ metadata:
 {{- with .Values.rbacRole.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
+{{- end }}
 rules:
 {{ .Values.rbacRole.rules }}
 ---
@@ -24,6 +25,7 @@ metadata:
 {{- with .Values.rbacRole.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
+{{- end }}
 subjects:
 - kind: ServiceAccount
   name: {{ template "monochart.serviceAccountName" . }}
@@ -45,6 +47,7 @@ metadata:
 {{- with .Values.rbacRole.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
+{{- end }}
 rules:
 {{ .Values.rbacRole.rules }}
 ---
@@ -56,6 +59,7 @@ metadata:
 {{- with .Values.rbacRole.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
+{{- end }}
 subjects:
 - kind: ServiceAccount
   name: {{ template "monochart.serviceAccountName" . }}
