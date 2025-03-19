@@ -11,6 +11,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ template "monochart.serviceAccountName" . }}-clusterrole
+{{- with .Values.rbacRole.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
 rules:
 {{ .Values.rbacRole.rules }}
 ---
@@ -18,6 +21,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "monochart.serviceAccountName" . }}-clusterrolebinding
+{{- with .Values.rbacRole.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
 subjects:
 - kind: ServiceAccount
   name: {{ template "monochart.serviceAccountName" . }}
@@ -36,6 +42,9 @@ kind: Role
 metadata:
   name: {{ template "monochart.serviceAccountName" . }}-role
   namespace: {{if eq .Values.rbacRole.namespace ""}}{{.Release.Namespace }}{{else}}{{.Values.rbacRole.namespace}}{{end}}
+{{- with .Values.rbacRole.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
 rules:
 {{ .Values.rbacRole.rules }}
 ---
@@ -44,6 +53,9 @@ kind: RoleBinding
 metadata:
   name: {{ template "monochart.serviceAccountName" . }}-rolebinding
   namespace: {{if eq .Values.rbacRole.namespace ""}}{{.Release.Namespace }}{{else}}{{.Values.rbacRole.namespace}}{{end}}
+{{- with .Values.rbacRole.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
 subjects:
 - kind: ServiceAccount
   name: {{ template "monochart.serviceAccountName" . }}
