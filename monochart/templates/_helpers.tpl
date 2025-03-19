@@ -125,7 +125,7 @@ VolumeMounts template block for deployable resources
 If the mount path ends with one of extensions specified below - we assume it's a regular file so
 we will mount it as a regular file (not a directory).
   */}}
-{{- if regexMatch ".*.(json|yaml|txt)$" $config.mountPath }}
+{{- if regexMatch ".*.(json|yaml|yml|txt|sh|js|ts|py)$" $config.mountPath }}
   subPath: {{ regexFind "[a-zA-Z0-9_.-]*.(json|yaml|yml|txt|sh|js|ts|py)$" $config.mountPath }}
 {{- end }}
 {{- end }}
