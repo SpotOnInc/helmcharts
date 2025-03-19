@@ -18,7 +18,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-{{ include "common.labels.standard" $root | indent 6 }}
+{{ include "common.labels.short" $root | indent 6 }}
   policyTypes:
   - Ingress
   - Egress

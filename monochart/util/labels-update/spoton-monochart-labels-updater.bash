@@ -41,6 +41,8 @@ RELEASE_NAME=$1
 RELEASE_NAMESPACE=$2
 echo
 echo "************************************************************"
+echo "[spoton-monochart labels update]"
+echo
 echo "RELEASE_NAMESPACE: ${RELEASE_NAMESPACE}"
 echo "RELEASE_NAME: ${RELEASE_NAME}"
 echo "************************************************************"
@@ -60,16 +62,16 @@ SERVICE="$DEPLOYMENT"
 echo "👷 Confirming that deployment ${DEPLOYMENT} exists before continuing..."
 deployment_yaml=$(kubectl get deployment -n "$RELEASE_NAMESPACE" "$DEPLOYMENT" -o yaml --ignore-not-found 2>&1)
 if [[ -z "$deployment_yaml" ]] || [[ "$deployment_yaml" =~ "not found" ]]; then
-  echo "⚠️  The deployment ${DEPLOYMENT} does not exist. Skipping."
+  echo "⚠️  The deployment ${DEPLOYMENT} does not exist. Nothing to do for label changes. Skipping."
   exit 0
 fi
 
 label_app_name=$(yq eval .spec.template.metadata.labels.\"app.kubernetes.io/name\" <<< "$deployment_yaml")
 if [[ "$label_app_name" == "$DEPLOYMENT" ]]; then
-  echo "✅ Deployment ${DEPLOYMENT} is already updated."
+  echo "✅ Deployment ${DEPLOYMENT} is already updated for monochart label changes."
   exit 0
 else
-  echo "ℹ️ Deployment ${DEPLOYMENT} needs updating."
+  echo "ℹ️ Deployment ${DEPLOYMENT} needs updating for monochart label changes."
 fi
 
 TEMP_DEPLOYMENT="${DEPLOYMENT}-temp"
@@ -78,16 +80,6 @@ echo
 echo "DEPLOYMENT: ${DEPLOYMENT}"
 echo "SERVICE: ${SERVICE}"
 echo "TEMP_DEPLOYMENT: ${TEMP_DEPLOYMENT}"
-
-##################################################
-# DRY RUN START
-# Remove this block to make the script active.
-echo
-echo "⚠️ This was a dry run. No changes were made."
-echo
-exit 0
-# DRY RUN END
-##################################################
 
 # Create a temp deployment (same except for the name)
 message '👷 Creating temp deployment...'
@@ -122,4 +114,4 @@ kubectl patch service -n "$RELEASE_NAMESPACE" "$SERVICE" -p "{\"spec\": {\"selec
 message '👷 Deleting temp deployment...'
 kubectl delete deployment -n "${RELEASE_NAMESPACE}" "${TEMP_DEPLOYMENT}"
 
-message '🏁 All done!'
+message '🏁 [spoton-monochart labels update] All done!'
