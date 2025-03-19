@@ -126,7 +126,7 @@ If the mount path ends with one of extensions specified below - we assume it's a
 we will mount it as a regular file (not a directory).
   */}}
 {{- if regexMatch ".*.(json|yaml|txt)$" $config.mountPath }}
-  subPath: {{ regexFind "[a-zA-Z0-9_.-]*.(json|yaml|txt)$" $config.mountPath }}
+  subPath: {{ regexFind "[a-zA-Z0-9_.-]*.(json|yaml|yml|txt|sh|js|ts|py)$" $config.mountPath }}
 {{- end }}
 {{- end }}
 {{- end }}
