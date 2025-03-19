@@ -109,7 +109,12 @@ kubectl apply -f "${DEPLOYMENT}".deployment.yaml
 kubectl rollout status deployment -n "${RELEASE_NAMESPACE}" "${DEPLOYMENT}" -w --timeout=0s
 
 # Patch the service so that its matchLabels point to the new pods
-kubectl patch service -n "$RELEASE_NAMESPACE" "$SERVICE" -p "{\"spec\": {\"selector\": {\"app.kubernetes.io/name\": \"${DEPLOYMENT}\"}}}"
+service_yaml=$(kubectl get service -n "$RELEASE_NAMESPACE" "$SERVICE" -o yaml --ignore-not-found 2>&1)
+if [[ -z "$service_yaml" ]] || [[ "$service_yaml" =~ "not found" ]]; then
+  echo "⚠️  The service ${SERVICE} does not exist. Skipping service patch."
+else
+  kubectl patch service -n "$RELEASE_NAMESPACE" "$SERVICE" -p "{\"spec\": {\"selector\": {\"app.kubernetes.io/name\": \"${DEPLOYMENT}\"}}}"
+fi
 
 message '👷 Deleting temp deployment...'
 kubectl delete deployment -n "${RELEASE_NAMESPACE}" "${TEMP_DEPLOYMENT}"
