@@ -29,7 +29,7 @@ check_release_is_monochart() {
 
 get_deployment() {
   helm_values=$(helm get values -n "$RELEASE_NAMESPACE" "$RELEASE_NAME")
-  DEPLOYMENT=$(yq eval .fullnameOverride <<< "$helm_values")
+  RESOURCE=$(yq eval .fullnameOverride <<< "$helm_values")
 
   if [[ "$RESOURCE" == "null" ]]; then
     message "⚠️  Could not determine deployment name. Exiting."
@@ -59,31 +59,31 @@ check_release_is_monochart
 get_deployment
 SERVICE="$RESOURCE"
 
-echo "👷 Confirming that deployment or statefulset ${DEPLOYMENT} exists before continuing..."
+echo "👷 Confirming that deployment or statefulset ${RESOURCE} exists before continuing..."
 resource_yaml=$(kubectl get deployment,statefulset -n "$RELEASE_NAMESPACE" "$RESOURCE" -o yaml --ignore-not-found 2>&1)
 if [[ -z "$resource_yaml" ]] || [[ "$resource_yaml" =~ "not found" ]]; then
-  echo "⚠️  The deployment or statefulset ${DEPLOYMENT} does not exist. Nothing to do for label changes. Skipping."
+  echo "⚠️  The deployment or statefulset ${RESOURCE} does not exist. Nothing to do for label changes. Skipping."
   exit 0
 fi
 
 label_app_name=$(yq eval .spec.template.metadata.labels.\"app.kubernetes.io/name\" <<< "$resource_yaml")
 if [[ "$label_app_name" == "$RESOURCE" ]]; then
-  echo "✅ Deployment or statefulset ${DEPLOYMENT} is already updated for monochart label changes."
+  echo "✅ Deployment or statefulset ${RESOURCE} is already updated for monochart label changes."
   exit 0
 else
-  echo "ℹ️ Deployment or statefulset ${DEPLOYMENT} needs updating for monochart label changes."
+  echo "ℹ️ Deployment or statefulset ${RESOURCE} needs updating for monochart label changes."
 fi
 
-TEMP_DEPLOYMENT="${DEPLOYMENT}-temp"
+TEMP_DEPLOYMENT="${RESOURCE}-temp"
 
 echo
-echo "DEPLOYMENT: ${DEPLOYMENT}"
+echo "DEPLOYMENT: ${RESOURCE}"
 echo "SERVICE: ${SERVICE}"
 echo "TEMP_DEPLOYMENT: ${TEMP_DEPLOYMENT}"
 
 # Create a temp resource (same except for the name)
 message '👷 Creating temp resource...'
-kubectl get deployment,statefulset -n "${RELEASE_NAMESPACE}" "${DEPLOYMENT}" -o yaml |
+kubectl get deployment,statefulset -n "${RELEASE_NAMESPACE}" "${RESOURCE}" -o yaml |
   yq eval ".metadata.name = \"${TEMP_DEPLOYMENT}\"" - \
     > "${TEMP_DEPLOYMENT}".resource.yaml
 
@@ -93,27 +93,27 @@ kubectl apply -f "${TEMP_DEPLOYMENT}".resource.yaml
 kubectl rollout status deployment,statefulset -n "${RELEASE_NAMESPACE}" "${TEMP_DEPLOYMENT}" -w --timeout=0s
 
 message '👷 Deleting old resource...'
-kubectl delete deployment,statefulset -n "${RELEASE_NAMESPACE}" "${DEPLOYMENT}"
+kubectl delete deployment,statefulset -n "${RELEASE_NAMESPACE}" "${RESOURCE}"
 
 message '👷 Creating new resource...'
 # Using yq, update the yaml with the new labels and apply this as the replacement resource
 kubectl get deployment,statefulset -n "$RELEASE_NAMESPACE" "${TEMP_DEPLOYMENT}" -o yaml |
   yq eval "
-    (.metadata.name = \"${DEPLOYMENT}\") |
-    (.spec.selector.matchLabels.\"app.kubernetes.io/name\"=\"${DEPLOYMENT}\") |
-    (.spec.template.metadata.labels.\"app.kubernetes.io/name\"=\"${DEPLOYMENT}\")
-  " - > "${DEPLOYMENT}".resource.yaml
-kubectl apply -f "${DEPLOYMENT}".resource.yaml
+    (.metadata.name = \"${RESOURCE}\") |
+    (.spec.selector.matchLabels.\"app.kubernetes.io/name\"=\"${RESOURCE}\") |
+    (.spec.template.metadata.labels.\"app.kubernetes.io/name\"=\"${RESOURCE}\")
+  " - > "${RESOURCE}".resource.yaml
+kubectl apply -f "${RESOURCE}".resource.yaml
 
 # Wait for resource to finish
-kubectl rollout status deployment,statefulset -n "${RELEASE_NAMESPACE}" "${DEPLOYMENT}" -w --timeout=0s
+kubectl rollout status deployment,statefulset -n "${RELEASE_NAMESPACE}" "${RESOURCE}" -w --timeout=0s
 
 # Patch the service so that its matchLabels point to the new pods
 service_yaml=$(kubectl get service -n "$RELEASE_NAMESPACE" "$SERVICE" -o yaml --ignore-not-found 2>&1)
 if [[ -z "$service_yaml" ]] || [[ "$service_yaml" =~ "not found" ]]; then
   echo "⚠️  The service ${SERVICE} does not exist. Skipping service patch."
 else
-  kubectl patch service -n "$RELEASE_NAMESPACE" "$SERVICE" -p "{\"spec\": {\"selector\": {\"app.kubernetes.io/name\": \"${DEPLOYMENT}\"}}}"
+  kubectl patch service -n "$RELEASE_NAMESPACE" "$SERVICE" -p "{\"spec\": {\"selector\": {\"app.kubernetes.io/name\": \"${RESOURCE}\"}}}"
 fi
 
 message '👷 Deleting temp resource...'
