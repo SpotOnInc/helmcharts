@@ -50,7 +50,8 @@ app.kubernetes.io/version: {{ .Values.image.tag | quote }}
 Labels to use in:
   deploy.spec.selector.matchLabels,
   statefulset.spec.selector.matchLabels,
-  statefulset.spec.volumeClaimTemplates.labels
+  statefulset.spec.volumeClaimTemplates.labels,
+  service.spec.selector (unless defined explicitly in the app's chart)
 */}}
 {{- define "common.labels.short" -}}
 app.kubernetes.io/name: {{ include "common.fullname" . }}
