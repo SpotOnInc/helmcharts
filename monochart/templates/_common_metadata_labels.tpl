@@ -38,10 +38,12 @@ Example output:
 Kubernetes standard labels
 */}}
 {{- define "common.labels.standard" -}}
-app.kubernetes.io/name: {{ include "common.name" . }}
+app.kubernetes.io/name: {{ include "common.fullname" . }}
 helm.sh/chart: {{ include "common.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/version: {{ .Values.image.tag | quote }}
+
 {{- end -}}
 
 {{/*
@@ -52,6 +54,6 @@ Labels to use in:
   service.spec.selector (unless defined explicitly in the app's chart)
 */}}
 {{- define "common.labels.short" -}}
-app.kubernetes.io/name: {{ include "common.name" . }}
+app.kubernetes.io/name: {{ include "common.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}

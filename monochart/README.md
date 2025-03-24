@@ -38,6 +38,12 @@ If you need more than one InitContainer, you can use **extraInitContainer** para
 ### SealedSecrets
 [SealedSecrets](https://github.com/bitnami-labs/sealed-secrets) is a kubernetes controller that allows us to generate and encrypt secrets using TLS certificates (RSA 4096 bit by default) and not the default base64. With it, we can create secrets and manager/store it inside of the github repository.
 
+This requires the sealedsecrets controller to be installed in the cluster first. The component to install for eks clusters is this one: https://github.com/SpotOnInc/infrastructure/blob/main/stacks/catalog/eks/cluster-services/sealed-secrets.yaml
+
+For kops clusters, the right component to use is this one: https://github.com/SpotOnInc/infrastructure/blob/main/stacks/catalog/helm-sealed-secrets.yaml
+
+To make sure a secret gets created before pod creation, use the extraAnnotations provided in the google-secrets example in the values.yaml.
+
 To enable it on this chart you need to add this values to the helmfile.
 
 ```yaml
@@ -52,14 +58,30 @@ sealedsecrets:
 envFrom:
     secrets:
     - google-secrets
+
+VolumeMountsConfig: |
+  - name: google-secrets
+    secret:
+      defaultMode: 420
+      secretName: google-secrets
+
+FirstVolumeMounts: |
+  - mountPath: /google/secrets
+    name: google-secrets
 ```
 
 The first will create a **sealed secret** resource called google-secrets with two secrets (SECRET_NAME and ANOTHER_SECRET)... when deployed, kubernetes will use the private key to decipher this secrets and get the correct value.
 
 The second, will setup this secret inside of the containers.
 
+The third and fourth, will set up a volume using a volume mount, that will create a file inside of the pod for each secret defined under encrypedData. (using this example, we should get a file named SECRET_NAME with the unencrypted data as the content, and same for ANOTHER_SECRET. )
+
 > Note: To generate you can use [kubeseal](https://github.com/bitnami-labs/sealed-secrets#installation-from-source) from CLI or you can use the Spoton [WebSeal](https://webseal.qa.spoton.sh/) interface.
 
+An example of using kubeseal: (The sealedsecret.pub cert is obtained in the logs of the sealedsecrets controller)
+```
+kubeseal --cert sealedsecret.pub --scope cluster-wide --format yaml <unencrypted-secret.yaml >sealed-secret.yaml
+```
 
 ### VolumeMounts
 The actual VolumeMounts of the old-monochart version works, but not very well when we need to manage it with differents containers (ex: InitContainers). so, we have add 3 new parameters to improve it
@@ -222,10 +244,10 @@ Ingress annotation indicating we want to use Application Load Balancer are neces
         ingress:
           default:
             enabled: true
+            className: alb
             annotations:
-              kubernetes.io/ingress.class: "alb"
               # Ingresses with the same group will use the same Load Balancer rather than create new one
-              alb.ingress.kubernetes.io/group.name: common
+              alb.ingress.kubernetes.io/group.name: '{{ $AppName }}'
               alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
               alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
               # Target type "IP" is required for service type "ClusterIP"

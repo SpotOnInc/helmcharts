@@ -2,6 +2,10 @@
 {{- if .Values.ambassador.filters -}}
 {{- range $name, $filter := .Values.ambassador.filters -}}
 {{- if $filter.enabled }}
+{{- $dnsName := include "common.fullname" $root -}}
+{{- if $filter.dnsNameOverride -}}
+{{-   $dnsName = $filter.dnsNameOverride -}}
+{{- end -}}
 ---
 apiVersion: getambassador.io/v3alpha1
 kind: Filter
@@ -13,7 +17,7 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" . | indent 4 }}
+{{ include "common.labels.standard" $root | indent 4 }}
 {{- with $filter.labels }}
 {{ toYaml .| indent 4 }}
 {{- end }}
@@ -28,7 +32,7 @@ spec:
     clientSessionMaxIdle: 0s
     grantType: '""'
     protectedOrigins:
-    - origin: https://{{ include "common.fullname" $root }}.{{ $.Release.Namespace }}.{{ $.Values.ambassador.tld }}
+    - origin: https://{{ $dnsName }}.{{ $.Values.ambassador.tld }}
     secretName: ambassador-oauth2-client-secret
     secretNamespace: ambassador
 {{- end -}}
