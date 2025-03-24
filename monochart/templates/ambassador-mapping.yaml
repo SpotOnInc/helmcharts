@@ -24,6 +24,14 @@ spec:
   {{- if $mapping.rewrite }}
   rewrite: {{ $mapping.rewrite }}
   {{- end }}
+  {{- if $mapping.ambassador_id }}
+  # This ambassador_id is only used for legacy Express deployments.  Do not use in the new cell
+  # based Kubernetes clusters.
+  ambassador_id: {{ $mapping.ambassador_id }}
+  {{- end }}
+  {{- if $mapping.redirect }}
+  path_redirect: {{ $mapping.redirect }}
+  {{- end }}
   service: {{ include "common.fullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local
   timeout_ms: {{ $mapping.timeout_ms | default 60000 }}
 {{- end -}}
