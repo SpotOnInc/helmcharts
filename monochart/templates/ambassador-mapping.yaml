@@ -32,7 +32,7 @@ spec:
   {{- if $mapping.redirect }}
   path_redirect: {{ $mapping.redirect }}
   {{- end }}
-  service: {{ include "common.fullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local
+  service: {{ include "common.fullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local{{ with $mapping.dest_port }}:{{ . }}{{ end }}
   timeout_ms: {{ $mapping.timeout_ms | default 60000 }}
 {{- end -}}
 {{- end -}}
