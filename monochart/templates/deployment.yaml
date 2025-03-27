@@ -180,10 +180,10 @@ spec:
 {{ tpl .Values.VolumeMountsConfig . | indent 8 }}
         {{- end }}
       {{- if .Values.persistence.enabled }}
-      - name: storage
+        - name: storage
       {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
       {{- else }}
         emptyDir: {}
       {{- end }}
