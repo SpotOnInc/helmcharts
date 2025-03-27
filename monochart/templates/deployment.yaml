@@ -139,6 +139,8 @@ spec:
 {{- end }}
 
         volumeMounts:
+        - mountPath: {{ $root.Values.persistence.mountPath | quote }}
+        name: storage
         {{- if .Values.FirstVolumeMounts }}
 {{ tpl .Values.FirstVolumeMounts . | indent 8 }}
         {{- if .Values.extraVolumeMounts }}
