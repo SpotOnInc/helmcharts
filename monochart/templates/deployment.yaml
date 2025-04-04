@@ -195,4 +195,5 @@ spec:
       {{- end }}
       {{- end }}
       {{- include "monochart.files.volumes" . | nindent 6 }}
+      {{- end }}
 {{- end -}}
