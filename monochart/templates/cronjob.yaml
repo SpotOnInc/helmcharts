@@ -32,7 +32,8 @@ spec:
 {{ toYaml . | indent 12 }}
 {{- end }}
           labels:
-{{ include "common.labels.standard" $root | indent 12 }}
+            app: {{ include "common.name" $root }}
+            release: {{ $root.Release.Name | quote }}
 {{- with $cron.pod.labels }}
 {{ toYaml .| indent 12 }}
 {{- end }}
