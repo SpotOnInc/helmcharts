@@ -2,32 +2,61 @@
 {{- if .Values.ambassador.filterPolicies -}}
 {{- range $name, $filterPolicy := .Values.ambassador.filterPolicies -}}
 {{- if $filterPolicy.enabled -}}
+{{- $dnsName := include "common.fullname" $root -}}
+{{- if $filterPolicy.dnsNameOverride -}}
+{{-   $dnsName = $filterPolicy.dnsNameOverride -}}
+{{- end -}}
 ---
 apiVersion: getambassador.io/v3alpha1
 kind: FilterPolicy
 metadata:
-  name: {{ include "common.fullname" . }}-{{ $name }}
+  name: {{ include "common.fullname" $root }}-{{ $name }}
   namespace: ambassador
 {{- with $filterPolicy.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" . | indent 4 }}
+{{ include "common.labels.standard" $root | indent 4 }}
 {{- with $filterPolicy.labels }}
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
   rules:
     {{- range $path := $filterPolicy.excludePaths }}
-    - host: {{ include "common.fullname" $root }}.{{ $.Release.Namespace }}.{{ $.Values.ambassador.tld }}
+    - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
       path: {{ quote $path }}
       filters:
-        - name: ambassador-okta-central-filter
+        {{- if $filterPolicy.customExcludePathFilters }}
+          {{- range $filter := $filterPolicy.customExcludePathFilters }}
+          - name: {{ quote $filter.name }}
+            namespace: {{ $filter.namespace | default "ambassador" }}
+            onDeny: {{ $filter.onDeny | default "continue" }}
+            {{- if $filter.onAllow }}
+            onAllow: {{ $filter.onAllow }}
+            {{- end }}
+          {{- end }}
+        {{- else }}
+        - name: okta-central-filter
           namespace: ambassador
           onDeny: continue
           onAllow: break
-        - name: ambassador-{{ include "common.fullname" $root }}-{{ $.Release.Namespace }}-okta-sso-filter
+        - name: {{ $dnsName }}-okta-sso-filter
+          namespace: ambassador
+        {{- end }}
+    {{- end }}
+    {{- if (($filterPolicy.merchantFilter).enabled) }}
+    - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
+      path: "*"
+      filters:
+        - name: okta-merchant-filter
+          namespace: ambassador
+    {{- end }}
+    {{- if (($filterPolicy.centralFilter).enabled) }}
+    - host: {{ $dnsName }}.{{ $.Values.ambassador.tld }}
+      path: "*"
+      filters:
+        - name: okta-central-filter
           namespace: ambassador
     {{- end }}
 {{- end -}}

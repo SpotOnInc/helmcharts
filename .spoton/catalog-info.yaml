@@ -23,5 +23,5 @@ metadata:
 
 spec:
   type: library
-  owner: group:default/ops
+  owner: compute
   lifecycle: production

@@ -1,3 +1,5 @@
+{{- $root := . -}}
+---
 {{- if .Values.deployment.enabled }}
 apiVersion: apps/v1
 kind: Deployment
@@ -33,8 +35,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "common.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- include "common.labels.short" . | nindent 6 }}
 {{- with .Values.deployment.strategy }}
   strategy:
 {{ toYaml . | indent 4 }}
@@ -140,6 +141,10 @@ spec:
 {{- end }}
 
         volumeMounts:
+        {{- if .Values.persistence.enabled }}
+        - mountPath: {{ $root.Values.persistence.mountPath | quote }}
+          name: storage
+        {{- end }}
         {{- if .Values.FirstVolumeMounts }}
 {{ tpl .Values.FirstVolumeMounts . | indent 8 }}
         {{- if .Values.extraVolumeMounts }}
@@ -181,10 +186,10 @@ spec:
 {{ tpl .Values.VolumeMountsConfig . | indent 8 }}
         {{- end }}
       {{- if .Values.persistence.enabled }}
-      - name: storage
+        - name: storage
       {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
       {{- else }}
         emptyDir: {}
       {{- end }}
