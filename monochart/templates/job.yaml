@@ -27,8 +27,7 @@ spec:
 {{ toYaml . | indent 8 }}
 {{- end }}
       labels:
-        app: {{ include "common.name" $root }}
-        release: {{ $root.Release.Name | quote }}
+{{ include "common.labels.standard" $root | indent 12 }}
 {{- with $job.pod.labels }}
 {{ toYaml .| indent 8 }}
 {{- end }}
