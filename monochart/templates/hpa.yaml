@@ -1,7 +1,11 @@
 {{- $root := . -}}
 {{- if .Values.hpa -}}
 {{- if .Values.hpa.enabled -}}
+{{- if semverCompare ">=1.23" $root.Capabilities.KubeVersion.Version }}
 apiVersion: autoscaling/v2
+{{- else }}
+apiVersion: autoscaling/v1
+{{- end }}
 kind: HorizontalPodAutoscaler
 metadata:
   namespace: {{ .Release.Namespace }}
