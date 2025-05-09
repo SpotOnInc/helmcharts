@@ -30,6 +30,9 @@ spec:
 {{- if hasKey $cron "parallelism" }}
       parallelism: {{ $cron.parallelism }}
 {{- end }}
+{{- if hasKey $cron "completionMode" }}
+      completionMode: {{ $cron.completionMode }}
+{{- end }}
       template:
         metadata:
           name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}

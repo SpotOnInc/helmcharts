@@ -25,6 +25,9 @@ spec:
 {{- if hasKey $job "parallelism" }}
   parallelism: {{ $job.parallelism }}
 {{- end }}
+{{- if hasKey $job "completionMode" }}
+  completionMode: {{ $job.completionMode }}
+{{- end }}
   template:
     metadata:
       name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
