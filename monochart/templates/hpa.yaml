@@ -45,11 +45,9 @@ spec:
         averageUtilization: {{ .Values.hpa.autoscaling.targetMemoryUtilizationPercentage }}
   {{- end }}
   {{- else }}
+  # Only the CPU metric is supported in autoscaling/v1
   {{- if .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
   targetCPUUtilizationPercentage: {{ .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
-  {{- end }}
-  {{- if .Values.hpa.autoscaling.targetMemoryUtilizationPercentage }}
-  targetMemoryUtilizationPercentage: {{ .Values.hpa.autoscaling.targetMemoryUtilizationPercentage }}
   {{- end }}
   {{- end }}
   {{- end }}
