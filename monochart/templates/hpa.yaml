@@ -26,6 +26,7 @@ spec:
     name: {{ include "common.fullname" .  }}
   minReplicas: {{ .Values.hpa.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.hpa.autoscaling.maxReplicas }}
+  {{- if semverCompare ">=1.23" $root.Capabilities.KubeVersion.Version }}
   metrics:
   {{- if .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
   - type: Resource
@@ -43,5 +44,13 @@ spec:
         type: Utilization
         averageUtilization: {{ .Values.hpa.autoscaling.targetMemoryUtilizationPercentage }}
   {{- end }}
-{{- end }}
+  {{- else }}
+  {{- if .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
+  targetCPUUtilizationPercentage: {{ .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.hpa.autoscaling.targetMemoryUtilizationPercentage }}
+  targetMemoryUtilizationPercentage: {{ .Values.hpa.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
 {{- end }}
