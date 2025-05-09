@@ -1,7 +1,7 @@
 {{- $root := . -}}
 {{- if .Values.hpa -}}
 {{- if .Values.hpa.enabled -}}
-{{- if semverCompare ">=1.23" .Capabilities.KubeVersion.Version }}
+{{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
 apiVersion: autoscaling/v2
 {{- else }}
 apiVersion: autoscaling/v1
@@ -26,7 +26,7 @@ spec:
     name: {{ include "common.fullname" .  }}
   minReplicas: {{ .Values.hpa.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.hpa.autoscaling.maxReplicas }}
-  {{- if semverCompare ">=1.23" .Capabilities.KubeVersion.Version }}
+  {{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
   metrics:
   {{- if .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
   - type: Resource
