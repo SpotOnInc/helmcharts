@@ -19,6 +19,15 @@ spec:
   activeDeadlineSeconds: {{ default 300 $job.activeDeadlineSeconds }}
   backoffLimit: {{ default 6 $job.backoffLimit }}
   ttlSecondsAfterFinished:  {{ default 600 $job.ttlSecondsAfterFinished }}
+{{- if hasKey $job "completions" }}
+  completions: {{ $job.completions }}
+{{- end }}
+{{- if hasKey $job "parallelism" }}
+  parallelism: {{ $job.parallelism }}
+{{- end }}
+{{- if hasKey $job "completionMode" }}
+  completionMode: {{ $job.completionMode }}
+{{- end }}
   template:
     metadata:
       name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}

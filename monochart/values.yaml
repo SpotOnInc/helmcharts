@@ -277,6 +277,10 @@ job:
     # annotations:
     #   name: value
     restartPolicy: Never
+    # https://kubernetes.io/docs/concepts/workloads/controllers/job/#parallel-jobs
+    # completions: 2  # Number of pod completions before the job is considered done
+    # parallelism: 5  # Number of pods that can run in parallel
+    # completionMode: "Indexed"  # How Pod completions are tracked. Can be "NonIndexed" (default) or "Indexed"
     pod:
       # securityContext: {}
       # hostAliases:
@@ -306,6 +310,10 @@ cronjob:
     activeDeadlineSeconds: 300
     startingDeadlineSeconds: 180
     restartPolicy: Never
+    # https://kubernetes.io/docs/concepts/workloads/controllers/job/#parallel-jobs
+    # completions: 2  # Number of pod completions before the job is considered done
+    # parallelism: 5  # Number of pods that can run in parallel
+    # completionMode: "Indexed"  # How Pod completions are tracked. Can be "NonIndexed" (default) or "Indexed"
     pod:
       # securityContext: {}
       # hostAliases:
