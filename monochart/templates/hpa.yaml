@@ -1,7 +1,11 @@
 {{- $root := . -}}
 {{- if .Values.hpa -}}
 {{- if .Values.hpa.enabled -}}
+{{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
 apiVersion: autoscaling/v2
+{{- else }}
+apiVersion: autoscaling/v1
+{{- end }}
 kind: HorizontalPodAutoscaler
 metadata:
   namespace: {{ .Release.Namespace }}
@@ -22,6 +26,7 @@ spec:
     name: {{ include "common.fullname" .  }}
   minReplicas: {{ .Values.hpa.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.hpa.autoscaling.maxReplicas }}
+  {{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
   metrics:
   {{- if .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
   - type: Resource
@@ -39,5 +44,11 @@ spec:
         type: Utilization
         averageUtilization: {{ .Values.hpa.autoscaling.targetMemoryUtilizationPercentage }}
   {{- end }}
-{{- end }}
+  {{- else }}
+  # Only the CPU metric is supported in autoscaling/v1
+  {{- if .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
+  targetCPUUtilizationPercentage: {{ .Values.hpa.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
 {{- end }}

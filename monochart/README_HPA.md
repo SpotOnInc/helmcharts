@@ -9,6 +9,8 @@ If the load decreases, and the number of Pods is above the configured minimum, t
 
 This document walks you through an example of enabling HorizontalPodAutoscaler to automatically manage scale for an example web app. This example workload is Apache httpd running some PHP code
 
+NOTE: on kOps clusters, only the CPU metric `targetCPUUtilizationPercentage` is supported.
+
 ## Default Values
 
 |Key|Value|

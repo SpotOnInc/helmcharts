@@ -748,4 +748,5 @@ hpa:
     minReplicas: 3
     maxReplicas: 10
     targetCPUUtilizationPercentage: 70
+    # NOTE: the Memory metric is only supported on EKS clusters (kubernetes >= 1.23)
     targetMemoryUtilizationPercentage: 70
