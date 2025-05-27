@@ -31,7 +31,7 @@ subjects:
   name: {{ template "monochart.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: {{ template "monochart.serviceAccountName" . }}-clusterrole
   apiGroup: rbac.authorization.k8s.io
 

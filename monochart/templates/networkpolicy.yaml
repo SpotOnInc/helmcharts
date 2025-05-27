@@ -18,7 +18,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-{{ include "common.labels.short" $root | indent 6 }}
+{{ include "common.labels.standard" $root | indent 6 }}
+      serve: "true"
   policyTypes:
   - Ingress
   - Egress
@@ -40,6 +41,7 @@ spec:
   podSelector:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
+      serve: "true"
   policyTypes:
   - Egress
   egress:
@@ -67,6 +69,7 @@ spec:
   podSelector:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
+      serve: "true"
   policyTypes:
   - Egress
   egress:
@@ -92,6 +95,7 @@ spec:
   podSelector:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
+      serve: "true"
   policyTypes:
   - Egress
   egress:
@@ -124,6 +128,7 @@ spec:
   podSelector:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
+      serve: "true"
   policyTypes:
   - Ingress
   ingress:
@@ -181,6 +186,7 @@ spec:
   podSelector:
     matchLabels:
 {{ include "common.labels.standard" $root | indent 6 }}
+      serve: "true"
   policyTypes:
   - Egress
   egress:

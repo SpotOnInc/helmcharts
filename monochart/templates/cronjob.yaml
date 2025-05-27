@@ -24,6 +24,15 @@ spec:
   jobTemplate:
     spec:
       activeDeadlineSeconds: {{ default 300 $cron.activeDeadlineSeconds }}
+{{- if hasKey $cron "completions" }}
+      completions: {{ $cron.completions }}
+{{- end }}
+{{- if hasKey $cron "parallelism" }}
+      parallelism: {{ $cron.parallelism }}
+{{- end }}
+{{- if hasKey $cron "completionMode" }}
+      completionMode: {{ $cron.completionMode }}
+{{- end }}
       template:
         metadata:
           name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
@@ -32,8 +41,7 @@ spec:
 {{ toYaml . | indent 12 }}
 {{- end }}
           labels:
-            app: {{ include "common.name" $root }}
-            release: {{ $root.Release.Name | quote }}
+{{ include "common.labels.standard" $root | indent 12 }}
 {{- with $cron.pod.labels }}
 {{ toYaml .| indent 12 }}
 {{- end }}
