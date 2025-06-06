@@ -5,7 +5,8 @@
 {{- $dnsName := include "common.fullname" $root -}}
 {{- if $filterPolicy.dnsNameOverride -}}
 {{-   $dnsName = $filterPolicy.dnsNameOverride -}}
-{{- end -}}
+{{- end }}
+
 ---
 apiVersion: getambassador.io/v3alpha1
 kind: FilterPolicy
