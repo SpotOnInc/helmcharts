@@ -61,5 +61,5 @@ spec:
           namespace: ambassador
     {{- end }}
 {{- end -}}
-{{- end }}
-{{- end }}
+{{- end -}}
+{{- end -}}
