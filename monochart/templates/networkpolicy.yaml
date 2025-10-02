@@ -99,9 +99,7 @@ spec:
   policyTypes:
   - Egress
   egress:
-  - to:
-    - ipBlock:
-        cidr: 127.0.0.1/32
+  - to: null
     ports:
     - protocol: TCP
       port: 8181
