@@ -99,10 +99,16 @@ spec:
   policyTypes:
   - Egress
   egress:
-  - to: null
+  - to:
+    - ipBlock:
+        cidr: 127.0.0.1/32
+    - ipBlock:
+        cidr: 169.254.169.254/32
     ports:
     - protocol: TCP
       port: 8181
+    - protocol: TCP
+      port: 80
 
 {{/* End DenyALL */}}
 {{- end }}
