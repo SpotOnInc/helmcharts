@@ -100,9 +100,8 @@ spec:
   - Egress
   egress:
   - to:
-    - podSelector:
-        matchLabels:
-          app: kiam
+    - ipBlock:
+        cidr: 127.0.0.1/32
     ports:
     - protocol: TCP
       port: 8181
