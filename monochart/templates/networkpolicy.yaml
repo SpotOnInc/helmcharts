@@ -102,7 +102,7 @@ spec:
   - to:
     - podSelector:
         matchLabels:
-          app: kiam-agent
+          app: kiam
     ports:
     - protocol: TCP
       port: 8181
