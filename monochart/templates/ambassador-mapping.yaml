@@ -34,6 +34,10 @@ spec:
   {{- end }}
   service: {{ include "common.fullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local:{{- if $mapping.dest_port }}{{ $mapping.dest_port }}{{- else if $mapping.grpc }}8082{{- else }}80{{- end }}
   timeout_ms: {{ $mapping.timeout_ms | default 60000 }}
+  {{- if $mapping.allow_upgrade }}
+  allow_upgrade:
+{{ toYaml $mapping.allow_upgrade | indent 2 }}
+  {{- end }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
