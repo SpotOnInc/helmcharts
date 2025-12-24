@@ -90,7 +90,7 @@ spec:
             pathType: {{ if hasSuffix "*" . }} Prefix {{ else }} Exact {{ end }}
             backend:
               service:
-                name: {{ $serviceName }}-public
+                name: {{ if $ingress.useMigrationProxy }} cloud-migration-proxy-{{ $serviceName }}-public {{ else }} {{ $serviceName }}-public {{ end }}
                 port:
                   name: use-annotation
             {{- end }}
@@ -109,7 +109,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ $serviceName }}
+                name: {{ if $ingress.useMigrationProxy }} cloud-migration-proxy-{{ $serviceName }} {{ else }} {{ $serviceName }} {{ end }}
                 port:
                   {{- if default "<none>" $ingress.port | regexMatch "^[0-9]*$" }}
                   number: {{ $ingress.port }}
