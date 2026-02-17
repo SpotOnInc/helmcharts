@@ -1,6 +1,6 @@
 {{- $root := . -}}
-{{- $serviceName := include "common.fullname" . -}}
 {{- range $name, $ingress := .Values.ingress -}}
+{{- $serviceName := ternary (printf "cloud-migration-proxy-%s" (include "common.fullname" $root)) (include "common.fullname" $root) $ingress.useMigrationProxy -}}
 {{- if $ingress.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -90,7 +90,7 @@ spec:
             pathType: {{ if hasSuffix "*" . }} Prefix {{ else }} Exact {{ end }}
             backend:
               service:
-                name: {{ if $ingress.useMigrationProxy }} cloud-migration-proxy-{{ $serviceName }}-public {{ else }} {{ $serviceName }}-public {{ end }}
+                name: {{ $serviceName }}-public
                 port:
                   name: use-annotation
             {{- end }}
@@ -109,7 +109,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ if $ingress.useMigrationProxy }} cloud-migration-proxy-{{ $serviceName }} {{ else }} {{ $serviceName }} {{ end }}
+                name: {{ $serviceName }}
                 port:
                   {{- if default "<none>" $ingress.port | regexMatch "^[0-9]*$" }}
                   number: {{ $ingress.port }}
